@@ -7,7 +7,11 @@ const RoomSchema = new Schema({
     number: {
         type: Number, 
         required: true,
-    }, 
+    },
+    description: {
+        type: String, 
+        required: true,
+    },
     type: {
         type: String, 
         enum: ['single', 'double', 'twin'], 

@@ -29,5 +29,11 @@ const ReservationSchema = new Schema({
     totalPrice: {
         type: Number, 
         required: true,
+    },
+    isActive: {
+        type: Boolean, 
+        default: true,
     }
 })
+
+module.exports = mongoose.model('Reservation', ReservationSchema);

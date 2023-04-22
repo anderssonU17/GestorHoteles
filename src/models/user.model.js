@@ -19,9 +19,13 @@ const UserSchema = new Schema({
     }, 
     rol: {
         type: String, 
-        enum: ['USER', 'ADMIN'], 
+        enum: ['USER', 'ADMIN', 'MANAGER'], 
         default: 'USER',
     }, 
+    hotel: {
+        type: Schema.Types.ObjectId, 
+        ref: 'Hotel'
+    },
     reservations: [{
         type: Schema.Types.ObjectId, 
         ref: 'Reservation',
