@@ -18,6 +18,9 @@ const createRoom = async(req, res) =>{
 
         newRoom = await newRoom.save();
 
+        findHotel.rooms.push(newRoom._id);
+        await findHotel.save();
+
         res.status(200).send({message: 'Se creo la habitacion correctamente.', newRoom})
 
     } catch (error) {
@@ -47,7 +50,7 @@ const updateRoom = async(req, res)=>{
         const {id} = req.params;
 
         //Verificar si existe el hotel nuevo
-        console.log(`Buscando si el hotel existe.............`);
+        
         const findHotel = await Hotels.findOne({_id: hotel}); 
         if(!findHotel){
             return res.status(400).json({

@@ -206,22 +206,36 @@ const deleteReservationToUser = async(idUser, idReservation)=>{
 
 }
 
-const changeAvailableHotel = async()=>{
+const convertDate = (date) => {
+    const isoDate = date.toISOString();
+    const newDate = isoDate.substring(0, 10).replace(/-/g, '');//substring nos deja seleccionar solo los caracteres que ponemos en los parametros, la funcion regular /'queVoyAquitar'/g, 'sustitucion'
+    return newDate;
+}
+
+/*Funcion para cambiar el estado de la habtacion, lo hace mediante la 
+comprobacion de la fecha actual y saber si la fehca de la resevacion caduco*/
+const changeAvailableRoom = async()=>{
     try {
         
+        let _now = convertDate(new Date());
+
         const allReservations = await Reservation.find();
+
         if(allReservations.length == 0) return null;
 
         for (let index = 0; index < allReservations.length; index++) {
+
+            let checkIn = new Date(allReservations[index].checkIn);
+            checkIn = convertDate(checkIn);
             
-            const room = await Room.findById( allReservations[i].room );
-            if( Date.parse( allReservations[index].checkIn ) == now() ) {
-                room.available = false;
-                await room.save();
+            let checkOut = new Date(allReservations[index].checkOut);
+            checkOut = convertDate(checkOut);
+            
+            if( checkIn ==  _now) {
+                await Room.findByIdAndUpdate({_id: allReservations[index].room}, {available: false})
             }
-            if( Date.parse( allReservations[index].checkOut ) < now() )
-                room.available = true;
-                await room.save();
+            if( checkOut < _now )
+            await Room.findByIdAndUpdate({_id: allReservations[index].room}, {available: true})
         }
 
     } catch (error) {
@@ -229,4 +243,5 @@ const changeAvailableHotel = async()=>{
     }
 }
 
-module.exports = {createReservation,readUserReservations,updateReservation,deleteReservation};
+
+module.exports = {createReservation,readUserReservations,updateReservation,deleteReservation,changeAvailableRoom};

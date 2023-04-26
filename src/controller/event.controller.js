@@ -53,4 +53,51 @@ const createEvent = async (req, res) => {
     }
 }
 
-module.exports = {createEvent}
+const readEventsForHotel = async(req, res) =>{
+    try {
+        
+        const {id} = req.body;
+
+        if(!(await Hotels.findById(id))) return res.status(404).send({message: `No se encontro el hotel en la base de datos.`})
+
+        const eventsHotel = await Events.find({hotel: id});
+
+        if(eventsHotel.length == 0) return res.status(404).send({message: `No se han encontrado eventos en este hotel`})
+        
+        return res.status(200).json({'Eventos del hotel': eventsHotel});
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({message: 'No se ha podido completar la operacion'})
+    }
+}
+
+const deleteEvent = async(req, res) =>{
+    try {
+        
+        const {id} = req.body;
+
+        const _deleteEvent = await Events.findByIdAndDelete(id);
+        if(_deleteEvent){ 
+
+            const hotel = await Hotels.findOneAndUpdate( {_id: _deleteEvent.hotel},
+                {
+                    $pull: {
+                        events: id,
+                    },
+                },
+                {new: true} );
+            
+
+            res.status(200).send({message: `Se elimino el evento.`, _deleteEvent})
+        }
+        else{ res.status(404).send({ok: false,message: `No se encontro el evento.`})}
+
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({message: 'No se ha podido completar la operacion'})
+    }
+}
+
+module.exports = {createEvent,readEventsForHotel,deleteEvent}
