@@ -60,7 +60,7 @@ const loginUser = async(req, res) => {
             .status(400)
             .send({ok: false, message: 'Password incorrecto'});
         }
-        const token = await generateJWT(user.id, user.name, user.email);
+        const token = await generateJWT(user._id, user.name, user.email);
         res.json({
             ok:  true,
             uId: user.id, 
@@ -123,4 +123,40 @@ const deleteUser = async (req, res) => {
     }
 
 }
-module.exports = {createUser, loginUser, editUser, deleteUser};
+
+// Crear usuario por defecto, solo se creara si no hay usuarios existentes
+const userDefault = async() =>{
+
+    //Comprobar que no hayan usuario ragistrados
+    const users = await Usuarios.find();
+
+    if(users.length == 0){
+        
+        let  user = new Usuarios();
+        
+        user.name = 'userDefault';
+        user.password = '123456';
+        user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync());
+        user.email = 'userDefault@gmail.com';
+        user.rol = 'MANAGER';
+        
+        user = await user.save();
+        return console.log(`Usuario por defecto creado correctamente, datos del usuario: ${user}`);
+
+    }
+}
+
+const readUsers = async(req, res) =>{
+    try {
+        const users = await Usuarios.find();
+        if(users.length == 0) return res.status(404).send({message: 'No se han encontrado usuarios'});
+
+        return res.status(200).json({'Usuarios encontrados': users});
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({message: 'No se ha podido completar la operacion'})
+    }
+}
+
+module.exports = {createUser, loginUser, editUser, deleteUser,userDefault, readUsers};

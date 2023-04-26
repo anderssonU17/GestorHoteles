@@ -18,7 +18,6 @@ const validateJWT = async(req = request, res = response, next) => {
         const payload = jwt.decode(token, process.env.SECRET_KEY);
         //Usuario se buscara por medio del id
         const userEncontrado = await Usuarios.findById(payload.uId);
-        console.log(userEncontrado);
 
         //Verificar token no ha expirado
         if(payload.exp <= moment().unix()){
@@ -36,7 +35,12 @@ const validateJWT = async(req = request, res = response, next) => {
 
         next();
     }catch(err){
-        throw new Error(err);
+        console.log(err)
+        res.status(500).json({
+            ok: false, 
+            message: `Error con la comprobacion del token.`, 
+            error: err,
+        });
     }
 }
 

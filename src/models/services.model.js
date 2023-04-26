@@ -19,11 +19,7 @@ const ServiceSchema = new Schema({
     hotel: {
         type: Schema.Types.ObjectId, 
         ref: 'Hotel',
-    },
-    reservations: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Reservation',
-    }]
+    }
 });
 
 module.exports = mongoose.model('Service', ServiceSchema)

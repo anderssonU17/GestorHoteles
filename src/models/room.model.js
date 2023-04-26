@@ -26,22 +26,24 @@ const RoomSchema = new Schema({
         ref: 'Hotel', 
         required: true,
     },
-    reservations: [{
-        type: Schema.Types.ObjectId, 
-        ref: 'Reservation',
-    }],
+    // reservations: [{
+    //     type: Schema.Types.ObjectId, 
+    //     ref: 'Reservation',
+    // }],
     available: {
-        type: Boolean, 
+        type: Boolean,
         default: true,
     },
-    availableFrom: {
-        type: Date,
-        required: true,
-    }, 
-    availableTo: {
-        type: Date,
-        required: true,
-    },
+    // availableFrom: {
+    //     type: Date,
+    //     // required: true,
+    //     default: Date.now(),
+    // }, 
+    // availableTo: {
+    //     type: Date,
+    //     // required: true,
+    //     default: undefined,
+    // },
 })
 
 module.exports = mongoose.model('Room', RoomSchema);

@@ -19,7 +19,7 @@ const UserSchema = new Schema({
     }, 
     rol: {
         type: String, 
-        enum: ['USER', 'ADMIN', 'MANAGER'], 
+        enum: ['USER', 'ADMIN', 'MANAGER'],
         default: 'USER',
     }, 
     hotel: {

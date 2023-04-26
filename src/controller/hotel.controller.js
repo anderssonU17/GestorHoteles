@@ -49,6 +49,20 @@ const createHotel = async(req, res) => {
     }
 }
 
+const readHotels = async()=>{
+    try {
+        
+        const hotels = await Hotels.find();
+        if(hotels.length == 0) return res.status(404).send({message: 'No se han encontrado hoteles registrados.'});
+
+        return res.status(200).send({ok: true, 'Hoteles encontrados': hotels});
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({message: 'No se ha podido completar la operacion'})
+    }
+}
+
 const editHotel = async(req, res) => {
     const {name, description, address, admin} = req.body;
     const {id} = req.params;
@@ -140,4 +154,4 @@ const deleteHotel = async(req, res) => {
     }
 }
 
-module.exports = {createHotel, editHotel, deleteHotel}
+module.exports = {createHotel,readHotels, editHotel, deleteHotel}
