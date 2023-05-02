@@ -68,7 +68,46 @@ const readEventsForHotel = async(req, res) =>{
 
     } catch (error) {
         console.error(error);
-        res.status(500).send({message: 'No se ha podido completar la operacion'})
+        res.status(500).send({message: 'No se ha podido completar la operacion de listar'})
+    }
+}
+
+const updateEvent = async(req, res)=>{
+
+    const {id,name, description, type, date, hotel} = req.body;
+    
+    try {
+        
+        //Verificar si ya existe un evento con nombre y fecha igual 
+        const nameEventExist = await Events.findOne({name});
+        const dateEventExist = await Events.findOne({date});
+
+        if((nameEventExist && nameEventExist._id != id) || (dateEventExist && dateEventExist._id != id) ){
+            return res.status(400).json({
+                msg: 'Ya existe un evento con este nombre o fecha.',
+            });
+        }
+
+        //Verificar si el hotel ingresado existe
+        const hotelExist = await Hotels.findById(hotel);
+
+        if(!hotelExist){
+            return res.status(400).json({
+                msg: 'El hotel no existe',
+            });
+        }
+
+        const _updateEvent = await Events.findByIdAndUpdate({_id: id}, {name:name,description:description,type:type,date:date, hotel: hotel}, {new:true});
+
+        if(_updateEvent){
+            return res.status(200).send({message: `Se actualizo el evento correctamente.`, _updateEvent})
+        }else{
+            return res.status(404).send({message: 'No se encontro el evento en la base de datos.'})
+        }
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({message: 'No se ha podido completar la operacion de actualizar'})
     }
 }
 
@@ -78,6 +117,7 @@ const deleteEvent = async(req, res) =>{
         const {id} = req.body;
 
         const _deleteEvent = await Events.findByIdAndDelete(id);
+        
         if(_deleteEvent){ 
 
             const hotel = await Hotels.findOneAndUpdate( {_id: _deleteEvent.hotel},
@@ -90,8 +130,12 @@ const deleteEvent = async(req, res) =>{
             
 
             res.status(200).send({message: `Se elimino el evento.`, _deleteEvent})
+
+        }else{ 
+            
+            res.status(404).send({ok: false,message: `No se encontro el evento.`})
+        
         }
-        else{ res.status(404).send({ok: false,message: `No se encontro el evento.`})}
 
 
     } catch (error) {
@@ -100,4 +144,4 @@ const deleteEvent = async(req, res) =>{
     }
 }
 
-module.exports = {createEvent,readEventsForHotel,deleteEvent}
+module.exports = {createEvent,readEventsForHotel,updateEvent,deleteEvent}

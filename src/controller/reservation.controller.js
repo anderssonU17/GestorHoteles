@@ -94,11 +94,11 @@ const updateReservation = async(req, res)=>{
         if(!findRoom) return res.status(404).send({message: `No se encontro la habitacion dentro de la base de datos.`});
 
         //Verificar que las fechas no sean pasadas
-        if(checkIn < Date.now() && checkOut < Date.now() || checkOut < checkIn) return res.status(400).send({message: 'Las fechas ingresadas no son validas.'})
+        if( ( checkIn < Date.now() ) && ( checkOut < Date.now() ) || ( checkOut < checkIn ) ) 
+        return res.status(400).send({message: 'Las fechas ingresadas no son validas.'})
 
-        //Verificar que las reservaciones no se sobrepongan
         let roomReservations = await Reservation.find({room: room});
-        
+        //Verificar que las reservaciones no se sobrepongan
         let validDate = await checkDateUpdate(roomReservations,idReservation,room, checkIn, checkOut);
         if(validDate == false) return res.status(400).send({message: 'La nueva fecha que trata de reservarse sobrepone a otra(s).'});
 
@@ -129,10 +129,12 @@ const deleteReservation = async(req, res)=>{
         if(!findReservation) return res.status(404).send({message: `No se ha encontrado la reservacion`})
 
         const reservation_user = await Reservation.find({user: idUser, _id: idReservation});
-        if(reservation_user.length == 0) res.status(400).send({message: 'Este usuario no esta asociado a la reservacion'})
+        //Si el usuario que logueado trata de eliminar una reservacion se comprueba que sea una de las suyas.
+        if(reservation_user.length == 0) return res.status(400).send({message: 'Este usuario no esta asociado a la reservacion'})
 
         const delete_Reservation = await Reservation.findByIdAndDelete(idReservation);
 
+        //Le quitamos la reservacion al usuario logueado
         await deleteReservationToUser(idUser,idReservation);
 
         delete_Reservation ? 
@@ -206,24 +208,26 @@ const deleteReservationToUser = async(idUser, idReservation)=>{
 
 }
 
-const convertDate = (date) => {
-    const isoDate = date.toISOString();
-    const newDate = isoDate.substring(0, 10).replace(/-/g, '');//substring nos deja seleccionar solo los caracteres que ponemos en los parametros, la funcion regular /'queVoyAquitar'/g, 'sustitucion'
-    return newDate;
-}
+/*Funcion para cambiar el estado de la habitacion, lo hace mediante la 
+fecha actual y las fechas de iniio y de fin de una reservacion.
 
-/*Funcion para cambiar el estado de la habtacion, lo hace mediante la 
-comprobacion de la fecha actual y saber si la fehca de la resevacion caduco*/
+Si la fecha de reservacion es igual a la fecha actual, la habitacion 
+reservada pasa a estar ocupada.
+
+En dado caso la fehca de hoy es mayor a la fecha de salida de la reservacion, 
+la habitacion pasa a estar disponible*/
+
 const changeAvailableRoom = async()=>{
     try {
         
+        const allReservations = await Reservation.find();
+        if ( allReservations.length == 0 ) return null; // Si no hay resrvaciones no se devuelve nada y se termina la funcion.
+        
+        //Convertir la fecha de hoy a string
         let _now = convertDate(new Date());
 
-        const allReservations = await Reservation.find();
 
-        if(allReservations.length == 0) return null;
-
-        for (let index = 0; index < allReservations.length; index++) {
+        for ( let index = 0; index < allReservations.length; index++ ) {
 
             let checkIn = new Date(allReservations[index].checkIn);
             checkIn = convertDate(checkIn);
@@ -243,5 +247,10 @@ const changeAvailableRoom = async()=>{
     }
 }
 
+const convertDate = (date) => {
+    const isoDate = date.toISOString();
+    const newDate = isoDate.substring(0, 10).replace(/-/g, '');//substring nos deja seleccionar solo los caracteres que ponemos en los parametros, la funcion regular /'queVoyAquitar'/g, 'sustitucion'
+    return newDate;
+}
 
 module.exports = {createReservation,readUserReservations,updateReservation,deleteReservation,changeAvailableRoom};
