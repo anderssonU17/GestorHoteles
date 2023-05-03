@@ -58,7 +58,7 @@ const readEventsForHotel = async(req, res) =>{
         
         const {id} = req.body;
 
-        if(!(await Hotels.findById(id))) return res.status(404).send({message: `No se encontro el hotel en la base de datos.`})
+        if( ! ( await Hotels.findById(id) ) ) return res.status(404).send({message: `No se encontro el hotel en la base de datos.`})
 
         const eventsHotel = await Events.find({hotel: id});
 

@@ -3,6 +3,8 @@ const Servie = require("../models/services.model");
 const Hotel = require('../models/hotel.model');
 const Room = require('../models/room.model');
 
+const { validateAdminHotel } = require("../helpers/validateAdminHotel");
+
 const createService = async(req,res)=>{
     try {
         
@@ -17,7 +19,7 @@ const createService = async(req,res)=>{
         if(nameServiceExists) return res.status(400).send({message: 'El nombre del servicio ya esta en uso.'});
 
         //Comprobar que el usuario logueado sea el admin del hotel
-        if( !( await validateUserAdmin(idUser, hotel) ) ) return res.status(400)
+        if( !( await validateAdminHotel(idUser, hotel) ) ) return res.status(400)
         .send({message:
              'El usuario no es el administrador del hotel, solo el administrador puede agregar servicios a su hotel.'
             })
@@ -77,7 +79,7 @@ const updateServices = async(req, res) => {
         if( !hotelExists ) return res.status(400).send({message: `El hotel buscado no existe.`});
 
         //Comprobar que el usuario logueado sea el admin del hotel
-        let userIsAdmin =  await validateUserAdmin( idUser , hotel );
+        let userIsAdmin =  await validateAdminHotel( idUser , hotel );
         if ( !userIsAdmin ) {
 
             return res.status(400).send({message: `El usuario logueado no es el administrador del hotel.`})
@@ -124,7 +126,7 @@ const deleteService = async(req, res) =>{
         const serviceExists = await Servie.findById(idService);
 
         //Comprobar que el usuario logueado sea el admin del hotel al que pertenece el servicio
-        if ( ! validateUserAdmin( idUser, serviceExists.hotel ) ) 
+        if ( ! validateAdminHotel( idUser, serviceExists.hotel ) ) 
             return res.status(400).send({message: `Solo el administrador del hotel puede eliminar servicios del hotel.`})
         
         const _deleteService = await Servie.findByIdAndDelete( idService );
@@ -142,21 +144,6 @@ const deleteService = async(req, res) =>{
 }
 
 // ************************************** Funciones de ayuda
-
-const validateUserAdmin = async(idUser, idHotel) =>{
-    try {
-        const hotel = await Hotel.findById(idHotel);
-
-        const hotelAdmin = hotel.admin.toString();
-        
-        const user = idUser.toString();
-
-        return (hotelAdmin == user);
-
-    } catch (error) {
-        console.error(error);
-    }
-}
 
 /* Comprobar que el nombre del servicio no este en uso, si esta en uso verificar que el servicio actualizado sea el mismo
 que el que ya tiene ese nombre, de lo contrario nos regresa false */
