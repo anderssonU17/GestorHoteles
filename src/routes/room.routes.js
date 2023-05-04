@@ -22,7 +22,7 @@ api.post('/create-room', [
 
 api.get('/read-rooms', readRooms);
 
-api.put('/update-room/:id', [
+api.put('/edit-room/:id', [
     
     check('number', 'El parametro number es necesario para la creacion de una habitacion').not().isEmpty(),
     check('description', 'El parametro description es necesario para la creacion de una habitacion').not().isEmpty(),
