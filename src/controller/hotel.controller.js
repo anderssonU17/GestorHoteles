@@ -49,7 +49,7 @@ const createHotel = async(req, res) => {
     }
 }
 
-const readHotels = async()=>{
+const readHotels = async(req,res)=>{
     try {
         
         const hotels = await Hotels.find();

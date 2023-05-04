@@ -54,6 +54,7 @@ const createReservation = async(req, res)=>{
     }
 }
 
+//Ver las reservaciones del usuario logueado
 const readUserReservations = async(req, res)=>{
     try {
         
