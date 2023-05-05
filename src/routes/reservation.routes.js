@@ -23,6 +23,9 @@ api.get('/read-user-reservations', [
 api.put('/update-reservation',[
     validateJWT,
     check('idReservation', 'El parametro idReservation es obligatorio para editar una reservacion.').not().isEmpty(),
+    check('room', 'El parametro room es obligatorio para crear una reservacion.').not().isEmpty(),
+    check('checkIn', 'El parametro checkIn es obligatorio para crear una reservacion.').not().isEmpty(),
+    check('checkOut', 'El parametro checkOut es obligatorio para crear una reservacion.').not().isEmpty(),
     validateParams
 ],updateReservation)
 

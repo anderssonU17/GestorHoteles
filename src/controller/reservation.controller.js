@@ -99,12 +99,15 @@ const updateReservation = async(req, res)=>{
         if( ( checkIn < Date.now() ) && ( checkOut < Date.now() ) || ( checkOut < checkIn ) ) 
         return res.status(400).send({message: 'Las fechas ingresadas no son validas.'})
 
-        let roomReservations = await Reservation.find({room: room});
         //Verificar que las reservaciones no se sobrepongan
+        let roomReservations = await Reservation.find({room: room});
+
         let validDate = await checkDateUpdate(roomReservations,idReservation,room, checkIn, checkOut);
         if(validDate == false) return res.status(400).send({message: 'La nueva fecha que trata de reservarse sobrepone a otra(s).'});
+        //Volver a calcular el totalPrice, por si se ha cambiado las fechas de reservacion
+        let _newTotalPrice = calculateTotalPriceDaysOfStay(checkIn, checkOut, findRoom.price );
 
-        const newReservation = await Reservation.findByIdAndUpdate({_id: idReservation},{room: room, checkIn: checkIn, checkOut: checkOut})
+        let newReservation = await Reservation.findByIdAndUpdate({_id: idReservation},{room: room, checkIn: checkIn, checkOut: checkOut, totalPrice: _newTotalPrice}, {new: true})
         
         newReservation ?
         res.status(200).send({message: 'Se ha actualizado la reservacion.', newReservation})
@@ -216,9 +219,11 @@ const calculateDaysOfStay = (checkIn, checkOut)=>{
         let _checkIn = new Date(checkIn).getTime();
         let _checkOut    = new Date(checkOut).getTime();
 
-        let daysOfStay = _checkOut -_checkIn;
+        let daysOfStay = ( _checkOut -_checkIn ) / ( 1000*60*60*24 );
 
-        return daysOfStay / ( 1000*60*60*24 );
+        if(daysOfStay < 1) return 1;
+
+        return daysOfStay + 1;
 
     } catch (error) {
         console.err(error);
