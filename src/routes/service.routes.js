@@ -8,7 +8,7 @@ const { createService, readServicesByHotel ,updateServices, deleteService } = re
 
 const api = Router();
 
-api.post('/create-servie',[
+api.post('/create-service',[
     validateJWT,
     check('name', 'El parametro name es necesario para la creacion de un servicio.').not().isEmpty(),
     check('description', 'El parametro description es necesario para la creacion de un servicio.').not().isEmpty(),
@@ -17,6 +17,7 @@ api.post('/create-servie',[
     validateParams
 ], createService);
 
+//Buscar servicios por hotel
 api.get('/read-services', [
     check('idHotel', 'El id del hotel es necesario para leer sus servicios.').not().isEmpty(),
     validateParams,

@@ -18,21 +18,22 @@ const createReservation = async(req, res)=>{
         if(!findRoom) return res.status(404).send({message: `No se encontro la habitacion dentro de la base de datos.`});
 
         //Verificar que las fechas no sean pasadas
-        if(checkIn < Date.now() && checkOut < Date.now() || checkOut < checkIn) return res.status(400).send({message: 'Las fechas ingresadas no son validas.'})
+        //Parseamos las fechas solo para hacer la comprobacion de que no sean fechas pasadas a las de hoy
+        if(Date.parse(checkIn) < Date.now() || Date.parse(checkOut) < Date.now() || checkOut < checkIn) 
+        return res.status(400).send({message: 'Las fechas ingresadas no son validas.'})
 
         //Verificar que las reservaciones no se sobrepongan
         let roomReservations = await Reservation.find({room: room});
-        
+
         let validDate = checkDate(roomReservations, checkIn, checkOut);
         if(validDate == false) return res.status(400).send({message: 'La fecha que trata de reservar se sobrepone a otra(s).'});
 
-        let newReservation = new Reservation();
-        newReservation.user = findUser._id;
-        newReservation.room = findRoom._id;
-        newReservation.checkIn = checkIn;
-        newReservation.checkOut = checkOut;
-        newReservation.totalPrice = findRoom.price;
+        //Crear la nueva reservacion
+        let newReservation = new Reservation(req.body);
+        newReservation.user = idUser;
 
+        //Calcular los dias de estadia y luego multiplicarlo por el costo de por dia de la habitacion
+        newReservation.totalPrice = calculateTotalPriceDaysOfStay(checkIn, checkOut, findRoom.price);
 
         newReservation = await newReservation.save();
 
@@ -207,6 +208,28 @@ const deleteReservationToUser = async(idUser, idReservation)=>{
         {new: true}
     )
 
+}
+
+const calculateDaysOfStay = (checkIn, checkOut)=>{
+    try {
+        
+        let _checkIn = new Date(checkIn).getTime();
+        let _checkOut    = new Date(checkOut).getTime();
+
+        let daysOfStay = _checkOut -_checkIn;
+
+        return daysOfStay / ( 1000*60*60*24 );
+
+    } catch (error) {
+        console.err(error);
+    }
+}
+
+const calculateTotalPriceDaysOfStay = ( checkIn, checkOut, hotelPrice )=>{
+
+    let totalDays = calculateDaysOfStay(checkIn, checkOut);
+
+    return totalDays * hotelPrice;
 }
 
 /*Funcion para cambiar el estado de la habitacion, lo hace mediante la 
