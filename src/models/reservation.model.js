@@ -27,7 +27,7 @@ const ReservationSchema = new Schema({
         ref: 'Service',
     }], 
     totalPrice: {
-        type: Number, 
+        type: Number,
         required: true,
     },
     isActive: {

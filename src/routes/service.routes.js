@@ -4,7 +4,7 @@ const {validateJWT} = require('../middlewares/validate-jwt');
 const {validateParams} = require('../middlewares/validate-params')
 const {check} = require('express-validator');
 
-const { createService, readServicesByHotel ,updateServices, deleteService } = require('../controller/services.controller');
+const { createService, readServicesByHotel ,updateServices, deleteService,addServiceToReservation } = require('../controller/services.controller');
 
 const api = Router();
 
@@ -36,5 +36,13 @@ api.delete( '/delete-service',[
     check('idService', 'El idService es un parametro obligatorio para eliminar el servicio.').not().isEmpty(),
     validateParams
 ] , deleteService )
+
+//Administrador de hotel agrega servicio a una reservacion
+api.post('/add-service-to-reservation', [
+    validateJWT,
+    check('idService', 'El idService es un parametro obligatorio para eliminar el servicio.').not().isEmpty(),
+    check('idReservation', 'El idReservation es un parametro obligatorio para eliminar el servicio.').not().isEmpty(),
+    validateParams
+], addServiceToReservation)
 
 module.exports = api;

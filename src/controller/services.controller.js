@@ -1,7 +1,8 @@
 'use strict'
 const Servie = require("../models/services.model");
 const Hotel = require('../models/hotel.model');
-const Room = require('../models/room.model');
+const Reservation = require('../models/reservation.model')
+const User = require('../models/user.model')
 
 const { validateAdminHotel } = require("../helpers/validateAdminHotel");
 
@@ -143,6 +144,50 @@ const deleteService = async(req, res) =>{
     }
 }
 
+const addServiceToReservation = async(req, res) =>{
+    try {
+        
+        //Obtener los datos necesarios para la funcion
+        let idUser  = req.user._id;
+        const {idService, idReservation}  = req.body;
+
+        //Comproabar que el servicio exista
+        const serviceExists = await Servie.findById(idService);
+
+        if(!serviceExists) return res.status(404).send({message: `No se ha encontrado el servicio enl a base de datos.`});
+        
+        //Comprobar que el usuario logueado sea el administrador del hotel
+        if ( !validateAdminHotel( idUser , serviceExists.hotel ) ) return res.status(400).send({ message: 'El usuario no es el administrador del hotel, no tiene permisos para agregar servicios a una reservacion.' })
+
+        //Agregar el servicio a la reservacion
+        //Primero buscar la resrvacion para preparar los datos que seran sustituidos en la actualizacion luego
+        const _reservation = await Reservation.findById(idReservation);
+        const newTotalPrice = _reservation.totalPrice + serviceExists.price;
+        
+        const reservationToaddService = await Reservation.findByIdAndUpdate( 
+            { _id: idReservation },
+            {
+                $push: {
+                    services: idService
+                }
+                , totalPrice: newTotalPrice
+            },
+            {new: true}
+            )
+        
+
+        if(reservationToaddService){
+            return res.status(200).send({message: `Se agrego el servicio ${serviceExists.name} a la reservacion ${reservationToaddService._id}`, reservationToaddService})
+        }else{
+            return res.status(404).send({ message: `No se encontro la reservacion en la base de datos.` })
+        }
+
+    } catch (error) {
+        console.error(error)
+        res.status(500).send({message: `No se ha podidio completar la operacion.`})
+    }
+}
+
 // ************************************** Funciones de ayuda
 
 /* Comprobar que el nombre del servicio no este en uso, si esta en uso verificar que el servicio actualizado sea el mismo
@@ -169,4 +214,4 @@ const newNameServiceExists = async (  idHotel, idService, nameService ) =>{
 }
 
 // ************* Exportaciones
-module.exports = {createService , readServicesByHotel, updateServices , deleteService }
+module.exports = {createService , readServicesByHotel, updateServices , deleteService , addServiceToReservation}

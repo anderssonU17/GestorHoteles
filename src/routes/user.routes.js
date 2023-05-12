@@ -3,7 +3,9 @@
 const {Router} = require('express');
 const {check} = require('express-validator');
 const { createUser, loginUser, editUser, deleteUser, readUsers} = require('../controller/user.controller');
-const {adminRol, validateJWT,validateParams} = require('../middlewares');
+const { validateParams } = require('../middlewares/validate-params');
+const { validateJWT } = require('../middlewares/validate-jwt')
+const { adminRol } = require('../middlewares/validate-rol')
 
 
 const api = Router();
