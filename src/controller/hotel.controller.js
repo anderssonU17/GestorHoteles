@@ -80,6 +80,10 @@ const editHotel = async(req, res) => {
         // Obtener el hotel anterior
         const hotelAnterior = await Hotels.findById(id);
 
+        //Comprobar que el nuevo admin exista
+        const existsAdmin = await Usuarios.findById(admin);
+        if( !existsAdmin ) return res.status(404).send( { message: `El nuevo administrador no se encontro en la base de datos.` } )
+
         // Buscar y actualizar el admin anterior
         if (hotelAnterior.admin) {
         const adminAnterior = await Usuarios.findById(hotelAnterior.admin);
