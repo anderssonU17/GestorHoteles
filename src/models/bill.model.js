@@ -40,4 +40,4 @@ const BillSchema = new Schema({
     }
 });
 
-module.exports = moongose.model('Bill', BillSchema);
+module.exports = mongoose.model('Bill', BillSchema);

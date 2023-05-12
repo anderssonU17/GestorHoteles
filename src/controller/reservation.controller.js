@@ -264,10 +264,10 @@ const changeAvailableRoom = async()=>{
             let checkOut = new Date(allReservations[index].checkOut);
             checkOut = convertDate(checkOut);
             
-            if( checkIn ==  _now) {
+            if( checkIn <=  _now) {
                 await Room.findByIdAndUpdate({_id: allReservations[index].room}, {available: false})
             }
-            if( checkOut < _now )
+            if( checkOut <= _now )
             await Room.findByIdAndUpdate({_id: allReservations[index].room}, {available: true})
         }
 
