@@ -17,9 +17,10 @@ const createReservation = async(req, res)=>{
         const findRoom = await Room.findById(room);
         if(!findRoom) return res.status(404).send({message: `No se encontro la habitacion dentro de la base de datos.`});
 
+
         //Verificar que las fechas no sean pasadas
         //Parseamos las fechas solo para hacer la comprobacion de que no sean fechas pasadas a las de hoy
-        if(Date.parse(checkIn) < Date.now() || Date.parse(checkOut) < Date.now() || checkOut < checkIn) 
+        if(convertDate( new Date(checkIn) ) < convertDate( new Date() ) || convertDate( new Date(checkIn) ) < convertDate( new Date() ) || checkOut < checkIn) 
         return res.status(400).send({message: 'Las fechas ingresadas no son validas.'})
 
         //Verificar que las reservaciones no se sobrepongan
@@ -250,6 +251,7 @@ const changeAvailableRoom = async()=>{
     try {
         
         const allReservations = await Reservation.find();
+
         if ( allReservations.length == 0 ) return null; // Si no hay resrvaciones no se devuelve nada y se termina la funcion.
         
         //Convertir la fecha de hoy a string

@@ -6,8 +6,6 @@ const Room = require('../models/room.model');
 const Reservation = require('../models/reservation.model');
 const Service = require('../models/services.model');
 
-const arregloMarlon = [ { nombre , precio, repetido } ]
-
 const createBill = async(req, res) =>{
     try {
         

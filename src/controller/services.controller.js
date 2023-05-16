@@ -163,18 +163,37 @@ const addServiceToReservation = async(req, res) =>{
         //Primero buscar la resrvacion para preparar los datos que seran sustituidos en la actualizacion luego
         const _reservation = await Reservation.findById(idReservation);
         const newTotalPrice = _reservation.totalPrice + serviceExists.price;
+
+        //Comprobar si el servicio ya habia sido agregado
+        const previouslyAddedService = await checkAddedService( idReservation , idService );
+
+        //Si el servicio ya se habia agregado a la reservacion entonces aumentamos 1 a la peticion
+        if( previouslyAddedService ) {
+            let exitExpandServiec =  await changeQuantityService(idReservation, idService, newTotalPrice);
+
+            //Verficar que se haya podido aumentar la peticion al servicio
+            if(exitExpandServiec ){
+
+                //Volvemos a hacer la busqueda para retornar la reservacion actualizada
+                const updateReservation = await Reservation.findById(idReservation);
+                return res.status(200).send( { message: 'Se aumento la peticion del servicio correctamente.', updateReservation} ) 
+
+            }else{
+                return res.status(400).send( { message: 'No se pudo aumentar la peticion del servicio.'} ) 
+            }
+
+        }
         
         const reservationToaddService = await Reservation.findOneAndUpdate( 
             { _id: idReservation },
             {
                 $push: {
-                    services: idService
+                    services:{ service: idService } 
                 }
                 , totalPrice: newTotalPrice
             },
             {new: true}
             )
-        
 
         if(reservationToaddService){
             return res.status(200).send({message: `Se agrego el servicio ${serviceExists.name} a la reservacion ${reservationToaddService._id}`, reservationToaddService})
@@ -212,6 +231,39 @@ const newNameServiceExists = async (  idHotel, idService, nameService ) =>{
         console.error(error);
     }
 }
+
+//funcion para comprobar si el servicio ya habia sido agregado a la reservacion, de ser asi solo se le sumara uno a la peticion del servicio
+const checkAddedService = async( idReservation , idService ) =>{
+
+    try {
+
+        const addedServiice = await Reservation.findOne( { _id: idReservation , 'services.service': idService } );
+        return addedServiice;
+
+    } catch (error) {
+        console.error(error)
+    }
+
+}
+
+const changeQuantityService = async (idReservation, idService, newTotalPrice) => {
+    try {
+      
+      const updateQuantityService = await Reservation.updateOne(
+        { _id: idReservation, "services.service": idService },
+        {
+          $inc: {
+            "services.$.quantity": 1,
+          },
+          totalPrice: newTotalPrice,
+        }
+      );
+
+      return updateQuantityService;
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
 // ************* Exportaciones
 module.exports = {createService , readServicesByHotel, updateServices , deleteService , addServiceToReservation}

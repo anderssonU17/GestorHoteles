@@ -24,8 +24,9 @@ const ReservationSchema = new Schema({
     },
     services: [{
         service: {
-            type: Schema.Types.ObjectId, 
-            ref: 'Service'
+            type: Schema.Types.ObjectId,
+            ref: 'Service',
+            required: true
         },
         quantity: { 
             type: Number, default : 1 
