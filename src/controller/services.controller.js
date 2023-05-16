@@ -164,7 +164,7 @@ const addServiceToReservation = async(req, res) =>{
         const _reservation = await Reservation.findById(idReservation);
         const newTotalPrice = _reservation.totalPrice + serviceExists.price;
         
-        const reservationToaddService = await Reservation.findByIdAndUpdate( 
+        const reservationToaddService = await Reservation.findOneAndUpdate( 
             { _id: idReservation },
             {
                 $push: {

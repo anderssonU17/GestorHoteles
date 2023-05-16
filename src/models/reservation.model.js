@@ -23,8 +23,13 @@ const ReservationSchema = new Schema({
         required: true,
     },
     services: [{
-        type: Schema.Types.ObjectId, 
-        ref: 'Service',
+        service: {
+            type: Schema.Types.ObjectId, 
+            ref: 'Service'
+        },
+        quantity: { 
+            type: Number, default : 1 
+        }
     }], 
     totalPrice: {
         type: Number,

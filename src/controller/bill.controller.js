@@ -6,6 +6,8 @@ const Room = require('../models/room.model');
 const Reservation = require('../models/reservation.model');
 const Service = require('../models/services.model');
 
+const arregloMarlon = [ { nombre , precio, repetido } ]
+
 const createBill = async(req, res) =>{
     try {
         
@@ -73,20 +75,29 @@ const orderServices = async(services) =>{
         }
 
         let _orderedServices = [];
+        console.log(`Arreglo enviado: ${ services }`);
 
         for (let i = 0; i < services.length; i++) {
-            
             let _service = await Service.findById(services[i]);
-            // console.log(`Vuelta ${i}, servicio encontrado: ${_service}`);
-            let newServiceToBill = new serviceToBill( _service.name, _service.price, 0  );
+            let newServiceToBill = new serviceToBill( _service.name, _service.price);
             _orderedServices.push(newServiceToBill)
         }
 
-        console.log(orderServices);
+        verifyRepeatedServices( _orderedServices );
+        console.log(_orderedServices);
 
     } catch (error) {
         console.error(error)
     }
 }
+
+//Ver si hay servicios repetidos
+const verifyRepeatedServices = ( services ) =>{
+    
+    console.log(`*************Empezando la funcion para evitar servicios repetidos`);
+    console.log(services);
+
+}
+
 
 module.exports = {createBill}
