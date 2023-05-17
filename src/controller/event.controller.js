@@ -1,5 +1,6 @@
 'use strict'
 
+const { validateManagerHotel } = require('../helpers/validateManagerHotel');
 const Events = require('../models/event.model');
 const Hotels = require('../models/hotel.model');
 
@@ -7,6 +8,9 @@ const createEvent = async (req, res) => {
     const {name, description, type, date, hotel} = req.body;
 
     try{
+
+        if( ! validateManagerHotel( req.user._id , hotel ) ) return res.status(400).send({ msg: `El usuario logueado no es el manager del hotel.` })
+
         //Verificar si ya existe un evento con nombre y fecha igual 
         const eventExist = await Events.findOne({name, date});
 
@@ -78,6 +82,8 @@ const updateEvent = async(req, res)=>{
     
     try {
         
+        if( ! validateManagerHotel( req.user._id , hotel ) ) return res.status(400).send({ msg: `El usuario logueado no es el manager del hotel.` })
+
         //Verificar si ya existe un evento con nombre y fecha igual 
         const nameEventExist = await Events.findOne({name});
         const dateEventExist = await Events.findOne({date});
@@ -115,6 +121,8 @@ const deleteEvent = async(req, res) =>{
     try {
         
         const {id} = req.body;
+
+        if( ! validateManagerHotel( req.user._id , id ) ) return res.status(400).send({ msg: `El usuario logueado no es el manager del hotel.` })
 
         const _deleteEvent = await Events.findByIdAndDelete(id);
         
