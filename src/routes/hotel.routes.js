@@ -10,7 +10,8 @@ const { validateJWT } = require('../middlewares/validate-jwt');
 const api = Router();
 
 api.post('/create-hotel',[
-    
+    validateJWT,
+    adminRol,
     check('name', 'El parametro name es necesario para la creacion de un hotel').not().isEmpty(),
     check('description', 'El parametro description es necesario para la creacion de un hotel').not().isEmpty(),
     check('address', 'El parametro address es necesario para la creacion de un hotel').not().isEmpty(),
@@ -23,7 +24,6 @@ api.get('/read-hotels', readHotels);
 
 api.put('/edit-hotel/:id', [
     validateJWT,
-    adminRol,
     check('name', 'El parametro name es necesario para la creacion de un hotel').not().isEmpty(),
     check('description', 'El parametro description es necesario para la creacion de un hotel').not().isEmpty(),
     check('address', 'El parametro address es necesario para la creacion de un hotel').not().isEmpty(),
@@ -31,6 +31,9 @@ api.put('/edit-hotel/:id', [
     validateParams
 ], editHotel);
 
-api.delete('/delete-hotel/:id', deleteHotel);
+api.delete('/delete-hotel/:id',[
+    validateJWT,
+    adminRol
+], deleteHotel);
 
 module.exports = api;

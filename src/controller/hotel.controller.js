@@ -1,5 +1,6 @@
 'use strict'
 
+const { validateManagerHotel } = require('../helpers/validateManagerHotel');
 const Hotels = require('../models/hotel.model');
 const Usuarios = require('../models/user.model');
 
@@ -31,7 +32,7 @@ const createHotel = async(req, res) => {
 
         //Agregar el hotel al usuario admin 
         adminExist.hotel = newHotel._id; // Busca al usuario admin en la DB, asocia al usuario admin con el nuevo hotel
-        adminExist.rol = 'MANAGER';
+        if(!adminExist.rol != 'ADMIN') adminExist.rol = 'MANAGER';
         await adminExist.save();
 
         return res.status(200).send({
@@ -71,6 +72,11 @@ const editHotel = async(req, res) => {
     try{
         //Verificar si el hotel ya existe 
         const hotelExist = await Hotels.findOne({name});
+
+        if ( ! ( validateManagerHotel(admin, id) ) ) return res.status(400).send({
+            message: 
+            `El usuario no es el manager del hotel. Solo el manager puede realizar cambios en el hotel`
+            })
 
         if(hotelExist && hotelExist._id != id){
             return res.status(400).json({
@@ -149,7 +155,7 @@ const deleteHotel = async(req, res) => {
         const admin = await Usuarios.findOne({hotel: id});
         if(admin) {
             admin.hotel = null; 
-            admin.rol = 'USER'
+            if(admin.rol != 'ADMIN') admin.rol = 'USER'
             await admin.save();
         }
 
