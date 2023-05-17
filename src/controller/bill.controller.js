@@ -15,7 +15,7 @@ const createBill = async(req, res) =>{
         const Hotel = await findHotelByReservation( idReservation );
 
         //Verificar que el usuario logueado sea el admin del hotel donde esta la reservacion
-        const isAdmin = validateManagerHotel( idUser, Hotel._id )
+        const isAdmin = await validateManagerHotel( idUser, Hotel._id )
         if( !isAdmin ) return res.status(400).send({ message: `El usuario logueado no es el manager del hotel, solo el manager del hotel puede realizar faturas.` })
 
         //Contruir la factura utilizando la reservacion

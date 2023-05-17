@@ -73,7 +73,7 @@ const editHotel = async(req, res) => {
         //Verificar si el hotel ya existe 
         const hotelExist = await Hotels.findOne({name});
 
-        if ( ! ( validateManagerHotel(admin, id) ) ) return res.status(400).send({
+        if ( ! ( await validateManagerHotel(admin, id) ) ) return res.status(400).send({
             message: 
             `El usuario no es el manager del hotel. Solo el manager puede realizar cambios en el hotel`
             })

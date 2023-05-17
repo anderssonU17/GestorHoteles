@@ -9,7 +9,7 @@ const createRoom = async(req, res) =>{
 
         const {number,hotel} = req.body;
 
-        if( ! ( validateManagerHotel( req.user._id, hotel ) ) ) return res.status(400).send({ msg: `El usuario logueado no es el manager del hotel.` })
+        if( ! ( await validateManagerHotel( req.user._id, hotel ) ) ) return res.status(400).send({ msg: `El usuario logueado no es el manager del hotel.` })
         
         const findHotel = await Hotels.findById(hotel);
         if(!findHotel) return res.status(404).send({message: 'El hotel no se encontro dentro de la base de datos.'})
@@ -67,7 +67,7 @@ const updateRoom = async(req, res)=>{
         let {number, hotel} = req.body;
         const {id} = req.params;
 
-        if( ! ( validateManagerHotel( req.user._id, hotel ) ) ) return res.status(400).send({ msg: `El usuario logueado no es el manager del hotel.` })
+        if( ! (await validateManagerHotel( req.user._id, hotel ) ) ) return res.status(400).send({ msg: `El usuario logueado no es el manager del hotel.` })
 
         //Verificar si existe el hotel nuevo
         
@@ -104,7 +104,7 @@ const deleteRoom = async(req, res )=>{
 
         const findRoom = await Room.findById(id);
         
-        if( ! ( validateManagerHotel( req.user._id, findRoom.hotel ) ) ) return res.status(400).send({ msg: `El usuario logueado no es el manager del hotel.` })
+        if( ! ( await validateManagerHotel( req.user._id, findRoom.hotel ) ) ) return res.status(400).send({ msg: `El usuario logueado no es el manager del hotel.` })
 
         if(!findRoom) return res.status(404).send({message: `No se ha encontrado la habitacion.`})
 

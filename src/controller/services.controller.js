@@ -127,7 +127,7 @@ const deleteService = async(req, res) =>{
         const serviceExists = await Servie.findById(idService);
 
         //Comprobar que el usuario logueado sea el manager del hotel al que pertenece el servicio
-        if ( ! validateManagerHotel( idUser, serviceExists.hotel ) ) 
+        if ( ! await validateManagerHotel( idUser, serviceExists.hotel ) ) 
             return res.status(400).send({message: `Solo el manager del hotel puede eliminar servicios del hotel.`})
         
         const _deleteService = await Servie.findByIdAndDelete( idService );
@@ -157,7 +157,7 @@ const addServiceToReservation = async(req, res) =>{
         if(!serviceExists) return res.status(404).send({message: `No se ha encontrado el servicio enl a base de datos.`});
         
         //Comprobar que el usuario logueado sea el manager del hotel
-        if ( !validateManagerHotel( idUser , serviceExists.hotel ) ) return res.status(400).send({ message: 'El usuario no es el manager del hotel, no tiene permisos para agregar servicios a una reservacion.' })
+        if ( ! await validateManagerHotel( idUser , serviceExists.hotel ) ) return res.status(400).send({ message: 'El usuario no es el manager del hotel, no tiene permisos para agregar servicios a una reservacion.' })
 
         //Agregar el servicio a la reservacion
         //Primero buscar la resrvacion para preparar los datos que seran sustituidos en la actualizacion luego
