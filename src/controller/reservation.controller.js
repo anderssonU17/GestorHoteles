@@ -3,6 +3,7 @@ const User = require("../models/user.model");
 const Hotel = require("../models/hotel.model");
 const Room = require("../models/room.model");
 const Reservation = require("../models/reservation.model");
+const { validateManagerHotel } = require("../helpers/validateManagerHotel");
 
 const createReservation = async(req, res)=>{
     try {
@@ -69,6 +70,36 @@ const readUserReservations = async(req, res)=>{
 
     } catch (error) {
         console.log(err)
+        res.status(500).json({
+            ok: false, 
+            message: `No se ha podido ver las resevaciones del usuario.`, 
+            error: err,
+        });
+    }
+}
+
+//Ver todas las reservaciones que se le ha hecho a un hotel
+const readAllReservationHotel = async(req, res)=>{
+    try {
+        
+        const {idHotel} = req.body;
+        //Comprobar que el usuario que esta haciendo la peticion sea el manager o el admin general
+        if ( ! ( await validateManagerHotel( req.user._id, idHotel ) ) ) return res.status(400).send({ msg: `El usuario logueado no es el manager del hotel.` })
+
+        //Comprobar que el hotel exista
+        const existHotel = await Hotel.findById(idHotel);
+        if( !existHotel ) return res.status(400).send({ message: `El hotel no se encontro en la base de datos.` })
+
+        const rooms = await Room.find({ hotel: idHotel });
+        if(!rooms) return res.status(404).send({ message: `El hotel no cuenta con habitaciones, no se pueden hacer reservaciones.` });
+
+        const reservations = await Reservation.find( { hotel: rooms.hotel } );
+        if( reservations.length == 0 ) return res.status(404).send({ message: `El hotel no cuenta con reservaciones.` })
+
+        res.status(200).send({message: `Reservaciones del hotel:`, reservations});
+
+    } catch (error) {
+        console.error(error);
         res.status(500).json({
             ok: false, 
             message: `No se ha podido ver las resevaciones del usuario.`, 
@@ -284,4 +315,4 @@ const convertDate = (date) => {
     return newDate;
 }
 
-module.exports = {createReservation,readUserReservations,updateReservation,deleteReservation,changeAvailableRoom};
+module.exports = {createReservation,readUserReservations,readAllReservationHotel,updateReservation,deleteReservation,changeAvailableRoom};

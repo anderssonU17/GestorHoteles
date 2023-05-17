@@ -4,7 +4,7 @@ const {validateJWT} = require('../middlewares/validate-jwt')
 const {validateParams} = require('../middlewares/validate-params');
 const {check} = require('express-validator');
 
-const {createReservation,readUserReservations,updateReservation,deleteReservation} = require('../controller/reservation.controller');
+const {createReservation,readUserReservations,readAllReservationHotel,updateReservation,deleteReservation} = require('../controller/reservation.controller');
 
 const api = Router();
 
@@ -19,6 +19,12 @@ api.post('/create-reservation', [
 api.get('/read-user-reservations', [
     validateJWT
 ], readUserReservations)
+
+api.get('/read-all-reservations-hotel', [
+    validateJWT,
+    check('idHotel', 'El parametro idHotel es obligatorio para buscar las reservaciones.').not().isEmpty(),
+    validateParams
+], readAllReservationHotel)
 
 api.put('/update-reservation',[
     validateJWT,
