@@ -100,6 +100,32 @@ const editUser = async(req, res) => {
     }
 }
 
+const editOwnUser = async(req, res) => {
+    try{
+        const id = req.user;
+        const userEdit = {...req.body};
+        //Encriptar la contrasenia 
+        userEdit.password = userEdit.password
+        ? bcrypt.hashSync(userEdit.password, bcrypt.genSaltSync())
+        : userEdit.password;
+
+        const userComplete = await Usuarios.findByIdAndUpdate(id, userEdit, {new: true,});
+
+        if(userComplete){
+            const token = await generateJWT(userComplete.id, userComplete.name, userComplete.email);
+            return res.status(200).send({
+                message: 'Perfil actualizado correctamente', userComplete, token
+            });
+        }else {
+            res.status(404).send({
+                message: 'Este usuario no existe en la base de datos'
+            });
+        }
+    }catch(err){
+        throw new Error(err);
+    }
+}
+
 const deleteUser = async (req, res) => {
     try{
         //Obtener el id por token 
@@ -146,6 +172,22 @@ const userDefault = async() =>{
     }
 }
 
+const readOneUser = async(req, res)=>{
+    try {
+        
+        const {idUser} = req.body;
+
+        const findUser = await Usuarios.findOne({_id: idUser});
+        if(!findUser) return res.status(404).send({ message: `Usuario no econtrado en la base de datos.` });
+
+        res.status(200).send({ message: `Usuario encontrado en la base de datos`, findUser });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({message: 'No se ha podido completar la operacion'})
+    }
+}
+
 const readUsers = async(req, res) =>{
     try {
         const users = await Usuarios.find();
@@ -159,4 +201,4 @@ const readUsers = async(req, res) =>{
     }
 }
 
-module.exports = {createUser, loginUser, editUser, deleteUser,userDefault, readUsers};
+module.exports = {createUser, loginUser, editUser,editOwnUser, deleteUser,userDefault, readUsers,readOneUser};

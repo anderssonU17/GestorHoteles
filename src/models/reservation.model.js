@@ -37,7 +37,7 @@ const ReservationSchema = new Schema({
         required: true,
     },
     isActive: {
-        type: Boolean, 
+        type: Boolean,
         default: true,
     }
 })

@@ -2,7 +2,7 @@
 
 const {Router} = require('express');
 const {check} = require('express-validator');
-const { createUser, loginUser, editUser, deleteUser, readUsers} = require('../controller/user.controller');
+const { createUser, loginUser, editUser, deleteUser, readUsers,readOneUser} = require('../controller/user.controller');
 const { validateParams } = require('../middlewares/validate-params');
 const { validateJWT } = require('../middlewares/validate-jwt')
 const { adminRol } = require('../middlewares/validate-rol')
@@ -16,11 +16,29 @@ api.post('/create-user',[
     check('password', 'El parametro password debe contar con 6 o mas caracteres.').isLength({min: 6}),
     validateParams
 ],createUser);
+
 api.post('/login', loginUser);
+
 api.get('/read-users',[
     adminRol
 ], readUsers)
-api.put('/edit-user/:id', editUser);
+
+api.get('/read-one-user',[
+    validateJWT,
+    adminRol,
+    check('idUser', 'El parametro idUser es necesario para hacer la peticion.').not().isEmpty(),
+    validateParams
+], readOneUser)
+
+api.put('/edit-user/:id',[
+    validateJWT,
+    adminRol
+], editUser);
+//Editar perfil del usuario logueado
+api.put('/edit-user',[
+    validateJWT,
+], editUser);
+
 api.delete('/delete-client', validateJWT, deleteUser);
 
 module.exports = api;

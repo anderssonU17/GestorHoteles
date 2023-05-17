@@ -31,6 +31,7 @@ const createHotel = async(req, res) => {
 
         //Agregar el hotel al usuario admin 
         adminExist.hotel = newHotel._id; // Busca al usuario admin en la DB, asocia al usuario admin con el nuevo hotel
+        adminExist.rol = 'MANAGER';
         await adminExist.save();
 
         return res.status(200).send({
@@ -88,6 +89,7 @@ const editHotel = async(req, res) => {
         if (hotelAnterior.admin) {
         const adminAnterior = await Usuarios.findById(hotelAnterior.admin);
         adminAnterior.hotel = null;
+        if(adminAnterior.rol != 'ADMIN') adminAnterior.rol = 'USER'
         await adminAnterior.save();
         }
 
@@ -109,6 +111,7 @@ const editHotel = async(req, res) => {
 
             // Actualizar el hotel en la lista de hoteles del usuario admin 
             adminExist.hotel = hotelActualizado._id;
+            if(adminExist.rol != 'ADMIN') adminExist.rol = 'MANAGER'
             await adminExist.save();
 
             return res.status(200).send({
@@ -146,6 +149,7 @@ const deleteHotel = async(req, res) => {
         const admin = await Usuarios.findOne({hotel: id});
         if(admin) {
             admin.hotel = null; 
+            admin.rol = 'USER'
             await admin.save();
         }
 

@@ -4,7 +4,7 @@ const Hotel = require('../models/hotel.model');
 const Reservation = require('../models/reservation.model')
 const User = require('../models/user.model')
 
-const { validateAdminHotel } = require("../helpers/validateAdminHotel");
+const { validateManagerHotel } = require("../helpers/validateManagerHotel");
 
 const createService = async(req,res)=>{
     try {
@@ -20,9 +20,9 @@ const createService = async(req,res)=>{
         if(nameServiceExists) return res.status(400).send({message: 'El nombre del servicio ya esta en uso.'});
 
         //Comprobar que el usuario logueado sea el admin del hotel
-        if( !( await validateAdminHotel(idUser, hotel) ) ) return res.status(400)
+        if( !( await validateManagerHotel(idUser, hotel) ) ) return res.status(400)
         .send({message:
-             'El usuario no es el administrador del hotel, solo el administrador puede agregar servicios a su hotel.'
+             'El usuario no es el manager del hotel, solo el manager puede agregar servicios a su hotel.'
             })
 
         let newService = new Servie(req.body);
@@ -80,10 +80,10 @@ const updateServices = async(req, res) => {
         if( !hotelExists ) return res.status(400).send({message: `El hotel buscado no existe.`});
 
         //Comprobar que el usuario logueado sea el admin del hotel
-        let userIsAdmin =  await validateAdminHotel( idUser , hotel );
-        if ( !userIsAdmin ) {
+        let userIsManager =  await validateManagerHotel( idUser , hotel );
+        if ( !userIsManager ) {
 
-            return res.status(400).send({message: `El usuario logueado no es el administrador del hotel.`})
+            return res.status(400).send({message: `El usuario logueado no es el manager del hotel.`})
         
         }
 
@@ -126,9 +126,9 @@ const deleteService = async(req, res) =>{
         //Comproabar que el servicio exista
         const serviceExists = await Servie.findById(idService);
 
-        //Comprobar que el usuario logueado sea el admin del hotel al que pertenece el servicio
-        if ( ! validateAdminHotel( idUser, serviceExists.hotel ) ) 
-            return res.status(400).send({message: `Solo el administrador del hotel puede eliminar servicios del hotel.`})
+        //Comprobar que el usuario logueado sea el manager del hotel al que pertenece el servicio
+        if ( ! validateManagerHotel( idUser, serviceExists.hotel ) ) 
+            return res.status(400).send({message: `Solo el manager del hotel puede eliminar servicios del hotel.`})
         
         const _deleteService = await Servie.findByIdAndDelete( idService );
 
@@ -156,8 +156,8 @@ const addServiceToReservation = async(req, res) =>{
 
         if(!serviceExists) return res.status(404).send({message: `No se ha encontrado el servicio enl a base de datos.`});
         
-        //Comprobar que el usuario logueado sea el administrador del hotel
-        if ( !validateAdminHotel( idUser , serviceExists.hotel ) ) return res.status(400).send({ message: 'El usuario no es el administrador del hotel, no tiene permisos para agregar servicios a una reservacion.' })
+        //Comprobar que el usuario logueado sea el manager del hotel
+        if ( !validateManagerHotel( idUser , serviceExists.hotel ) ) return res.status(400).send({ message: 'El usuario no es el manager del hotel, no tiene permisos para agregar servicios a una reservacion.' })
 
         //Agregar el servicio a la reservacion
         //Primero buscar la resrvacion para preparar los datos que seran sustituidos en la actualizacion luego

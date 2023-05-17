@@ -1,13 +1,15 @@
 
 const Hotel = require('../models/hotel.model');
 
-const validateAdminHotel = async(idUser, idHotel) =>{
+const validateManagerHotel = async(idUser, idHotel) =>{
     try {
         const hotel = await Hotel.findById(idHotel);
 
         const hotelAdmin = hotel.admin.toString();
         
         const user = idUser.toString();
+
+        if(user.rol == 'ADMIN') return true
 
         return (hotelAdmin == user);
 
@@ -16,4 +18,4 @@ const validateAdminHotel = async(idUser, idHotel) =>{
     }
 }
 
-module.exports = {validateAdminHotel};
+module.exports = {validateManagerHotel};
