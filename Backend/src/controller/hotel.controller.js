@@ -168,4 +168,21 @@ const deleteHotel = async(req, res) => {
     }
 }
 
-module.exports = {createHotel,readHotels, editHotel, deleteHotel}
+//Ver los hoteles mas visitados:
+const mostVisitedHotels = async(req, res)=>{
+    try {
+        
+        const findHotels = await Hotels.find().sort({ visits: -1 }).limit(10);
+
+        if(findHotels.length == 0) return res.status(404).send({message: `No se han agregado hoteles.`});
+
+        res.status(200).send({ message: `Hoteles mas visitados:`, findHotels })
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({msg: 'Error al eliminar al visualizar los hoteles.'})
+    }
+}
+
+
+module.exports = {createHotel,readHotels, editHotel, deleteHotel , mostVisitedHotels}
