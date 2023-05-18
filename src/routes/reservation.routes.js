@@ -4,7 +4,8 @@ const {validateJWT} = require('../middlewares/validate-jwt')
 const {validateParams} = require('../middlewares/validate-params');
 const {check} = require('express-validator');
 
-const {createReservation,readUserReservations,readAllReservationHotel,updateReservation,deleteReservation} = require('../controller/reservation.controller');
+const {createReservation,readUserReservations,readAllReservationHotel,
+    updateReservation,deleteReservation,deleteReservationManager} = require('../controller/reservation.controller');
 
 const api = Router();
 
@@ -35,10 +36,18 @@ api.put('/update-reservation',[
     validateParams
 ],updateReservation)
 
+//Eliminar una reservacion del usuario logueado
 api.delete('/delete-reservation',[
     validateJWT,
     check('idReservation', 'El parametro idReservation es obligatorio para eliminar una reservacion.').not().isEmpty(),
     validateParams
 ],deleteReservation)
+
+//Funcion del MANAGER para eliminar reservaciones de su hotel
+api.delete('/delete-reservation-manager',[
+    validateJWT,
+    check('idReservation', 'El parametro idReservation es obligatorio para eliminar una reservacion.').not().isEmpty(),
+    validateParams
+],deleteReservationManager)
 
 module.exports = api;

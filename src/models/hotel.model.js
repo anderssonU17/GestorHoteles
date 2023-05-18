@@ -25,7 +25,10 @@ const HotelSchema = new Schema({
         type: Schema.Types.ObjectId, 
         ref: 'Event',
     }],
-
+    visits:{
+        type: Number,
+        default: 0
+    },
     admin: {
         type: Schema.Types.ObjectId, 
         ref: 'User', 

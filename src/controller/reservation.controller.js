@@ -18,6 +18,9 @@ const createReservation = async(req, res)=>{
         const findRoom = await Room.findById(room);
         if(!findRoom) return res.status(404).send({message: `No se encontro la habitacion dentro de la base de datos.`});
 
+        //Comprobar que exista el hotel
+        const findHotel = await Hotel.findById(findRoom.hotel);
+        if(!findHotel) return res.status(404).send({message: `El hotel al que le pertenecia la habitacion ya no esta en la base de datos.`});
 
         //Verificar que las fechas no sean pasadas
         //Parseamos las fechas solo para hacer la comprobacion de que no sean fechas pasadas a las de hoy
@@ -40,6 +43,7 @@ const createReservation = async(req, res)=>{
         newReservation = await newReservation.save();
 
         await addReservationToUser(findUser._id, newReservation._id);
+        await updateVisistToHotel(findRoom.hotel, 1);
 
         newReservation ?
         res.status(200).json({msg: 'Se ha realizado la reservacion con exito.', 'Datos de la reservacion': newReservation})
@@ -156,6 +160,7 @@ const updateReservation = async(req, res)=>{
     }
 }
 
+// Eliminar reservaciones propias, solo permite eliminar reservaciones que se hayan hecho con el usuario logueado
 const deleteReservation = async(req, res)=>{
     try {
         
@@ -173,6 +178,7 @@ const deleteReservation = async(req, res)=>{
 
         //Le quitamos la reservacion al usuario logueado
         await deleteReservationToUser(idUser,idReservation);
+        await updateVisistToHotel( findReservation.hotel, -1 )
 
         delete_Reservation ? 
         res.status(200).send({msg: 'Se ha eliminado la reservacion',delete_Reservation})
@@ -186,6 +192,38 @@ const deleteReservation = async(req, res)=>{
             message: `No se ha eliminado la resevacion.`, 
             error: err,
         });
+    }
+}
+
+//Eliminar reservaciones de otros usuarios, solo el MANAGER del hotel puede hacerlo
+const deleteReservationManager = async(req, res)=>{
+    try {
+        
+        let idUser = req.user.id;
+        const{idReservation} = req.body;
+
+        const findReservation = await Reservation.findById(idReservation);
+        if(!findReservation) return res.status(404).send({message: `No se ha encontrado la reservacion`})
+
+        
+
+        if ( ! ( await validateManagerHotelByRoom( idUser, findReservation.room ) ) ) {
+            return res.status(400).send({ message: `El usuario logueado no es el manager del hotel, no puede remover reservaciones.` })
+        }
+
+        const delete_Reservation = await Reservation.findByIdAndDelete(idReservation);
+
+        //Le quitamos la reservacion al usuario logueado
+        await deleteReservationToUser(idUser,idReservation);
+        await updateVisistToHotel( findReservation.room, -1 )
+
+        delete_Reservation ? 
+        res.status(200).send({msg: 'Se ha eliminado la reservacion',delete_Reservation})
+        :
+        res.status(404).send({msg: 'No se ha eliminado la reservacion.', delete_Reservation})
+
+    } catch (error) {
+        console.error(error);
     }
 }
 
@@ -315,4 +353,46 @@ const convertDate = (date) => {
     return newDate;
 }
 
-module.exports = {createReservation,readUserReservations,readAllReservationHotel,updateReservation,deleteReservation,changeAvailableRoom};
+//Aumentar una visita al hotel
+const updateVisistToHotel = async( idHotel, addOrRemove )=>{
+    try {
+        //Volver a buscar el hotel solo cuando se quiera remover una vsista
+        if(addOrRemove < 1){
+            const findRoom = await Room.findById(idHotel);
+            const findHotel = await Hotel.findById(findRoom.hotel);
+            
+            if( !findHotel ) return null;
+            idHotel = findHotel._id;
+        }
+
+        const updateVisist = await Hotel.findByIdAndUpdate({ _id: idHotel }, { $inc: { visits: addOrRemove } });
+        
+
+        return updateVisist;
+
+    } catch (error) {
+        
+    }
+}
+
+const validateManagerHotelByRoom = async(idUser, idRoom)=>{
+    try {
+        
+        const findRoom = await Room.findById(idRoom);
+        if ( ! findRoom ) return false;
+
+        const hotel = await Hotel.findById(findRoom.hotel)
+        if(!hotel) return false;
+
+        return (await validateManagerHotel( idUser , hotel._id ) )
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+module.exports = {
+    createReservation,readUserReservations,readAllReservationHotel,
+    updateReservation,deleteReservation,changeAvailableRoom,
+    deleteReservationManager
+};
