@@ -20,7 +20,7 @@ api.post('/create-user',[
 api.post('/login', loginUser);
 
 api.get('/read-users',[
-    adminRol
+    // adminRol
 ], readUsers)
 
 api.get('/read-one-user',[

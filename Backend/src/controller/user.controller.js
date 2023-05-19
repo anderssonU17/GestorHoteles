@@ -197,6 +197,7 @@ const readUsers = async(req, res) =>{
 
     } catch (error) {
         console.error(error);
+        console.log(`TREMENDO ERRORRRRRRR PA`);
         res.status(500).send({message: 'No se ha podido completar la operacion'})
     }
 }

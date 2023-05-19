@@ -1,5 +1,7 @@
 'use strict'
 
+const cors = require("cors");
+
 const express = require('express');
 const app = express();
 const {connection} = require("./src/database/connection");
@@ -24,6 +26,8 @@ connection();
 app.use(express.urlencoded({extended: false}));
 
 app.use(express.json());
+
+app.use(cors());
 
 app.use('/api', routesU, routesH, routesE, routesRoom, routesReservation, routesService,routesBill);
 
