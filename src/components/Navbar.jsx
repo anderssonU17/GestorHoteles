@@ -1,15 +1,14 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 
 export const Navbar = () => {
 
-    const navigate = useNavigate();
+    const cerrarSesion = () => {
+        localStorage.removeItem("token");
+        window.location.href = "/login";
+    };
 
-    const onLogout = () => {
-        navigate('/login', {
-            replace: true
-        });
-    }
     return (
         <nav className="navbar navbar-expand-sm navbar-dark bg-dark p-2">
             
@@ -51,14 +50,13 @@ export const Navbar = () => {
                     <span className='nav-item nav-link text-primary'>
                         Andersson
                     </span>
-
-                    <button
-                        className='nav-item nav-link btn'
-                        onClick={onLogout}
+                    <Link
+                    className='nav-link'
+                    to="/login"
+                    onClick={() => cerrarSesion()}
                     >
-
-                        Logout
-                    </button>
+                    <LogoutIcon fontSize="medium"></LogoutIcon>
+                    </Link>
                 </ul>
             </div>
         </nav>
