@@ -1,9 +1,15 @@
 import React from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faShoppingCart, faBell } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faUser, faSignOutAlt, faSignOut } from '@fortawesome/free-solid-svg-icons';
 
 export const Navbar = () => {
+
+    const cerrarSesion = () => {
+        localStorage.removeItem("token");
+        window.location.href = "/login";
+    };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
@@ -29,55 +35,38 @@ export const Navbar = () => {
           </Link>
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <NavLink className="nav-link" activeClassName="active" to="/dashboard">
+              <Link className="nav-link" to="/hotel">
                 Hoteles
-              </NavLink>
+              </Link>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" activeClassName="active" to="/team">
+              <Link className="nav-link" to="/eventos">
                 Eventos
-              </NavLink>
+              </Link>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" activeClassName="active" to="/projects">
+              <Link className="nav-link" to="/reservacion">
                 Reservacion
-              </NavLink>
+              </Link>
             </li>
           </ul>
         </div>
         <div className="d-flex align-items-center">
-          <Link className="text-reset me-3" to="#">
-            <FontAwesomeIcon icon={faShoppingCart} />
+          <Link className="text-reset me-3" to="/user">
+            <FontAwesomeIcon icon={faUser} />
           </Link>
+          
           <div className="dropdown">
             <Link
-              className="text-reset me-3 dropdown-toggle hidden-arrow"
-              to="#"
+              className="nav-link text-reset me-3 hidden-arrow"
+              to="/login"
               id="navbarDropdownMenuLink"
               role="button"
-              data-mdb-toggle="dropdown"
               aria-expanded="false"
+              onClick={() => cerrarSesion()}
             >
-              <FontAwesomeIcon icon={faBell} />
-              <span className="badge rounded-pill badge-notification bg-danger">1</span>
+              <FontAwesomeIcon icon={faSignOutAlt} />
             </Link>
-            <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-              <li>
-                <NavLink className="dropdown-item" to="/profile">
-                  My profile
-                </NavLink>
-              </li>
-              <li>
-                <NavLink className="dropdown-item" to="/settings">
-                  Settings
-                </NavLink>
-              </li>
-              <li>
-                <NavLink className="dropdown-item" to="/logout">
-                  Logout
-                </NavLink>
-              </li>
-            </ul>
           </div>
         </div>
       </div>
