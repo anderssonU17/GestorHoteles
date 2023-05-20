@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { listHotels } from '../api/ApiHotel';
+import { FaSearch } from 'react-icons/fa';
 
 export const HotelesPage = () => {
   const [hotels, setHotels] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchHotels = async () => {
@@ -22,8 +24,18 @@ export const HotelesPage = () => {
     fetchHotels();
   }, []);
 
+  const handleSearchTermChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredHotels = hotels.filter((hotel) => {
+    const { name, address } = hotel;
+    const searchQuery = searchTerm.toLowerCase();
+    return name.toLowerCase().includes(searchQuery) || address.toLowerCase().includes(searchQuery);
+  });
+
   const renderHotelCards = () => {
-    return hotels.map((hotel, index) => (
+    return filteredHotels.map((hotel, index) => (
       <div className="col-md-4 mb-4 animate__animated animate__fadeIn" key={hotel._id}>
         <div className="card">
           <img src={`/src/assets/hoteles/hotel${index + 1}.jpg`} className="card-img-top" alt={`Hotel ${hotel._id}`} />
@@ -46,6 +58,17 @@ export const HotelesPage = () => {
           <p className="lead">Aquí encontrarás una selección de los mejores hoteles para tu estadía.</p>
           <hr className="my-4" />
           <p>Puedes explorar los hoteles disponibles y realizar reservaciones.</p>
+          <div className="input-group mb-4">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Buscar por hotel o dirección"
+              value={searchTerm}
+              onChange={handleSearchTermChange}
+            />
+            <div className="input-group-append">
+            </div>
+          </div>
         </div>
       </div>
 
