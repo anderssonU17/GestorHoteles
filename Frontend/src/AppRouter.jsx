@@ -1,15 +1,16 @@
 import { Route, Routes, Navigate } from "react-router-dom";
 import { UsuarioPage, HotelesPage } from "./hoteles";
-import { LoginPage, isUserAuthenticated } from "./auth";
+import { CreateAccount, LoginPage, isUserAuthenticated } from "./auth";
 import { Navbar } from './components';
 import './styles.css'
+import { Home } from "./home/components/Home";
 export const AppRouter = () => {
     return(
         <>
         {isUserAuthenticated() && <Navbar></Navbar>}
             <Routes>
                 <Route 
-                path="/" 
+                path="/*" 
                 element={
                     isUserAuthenticated() ? (
                     <HotelesPage/>
@@ -49,6 +50,31 @@ export const AppRouter = () => {
                     )
                     }
                     ></Route>
+
+                    {/* Ruta para home */}
+                <Route 
+                path="/"
+                element={
+                    isUserAuthenticated() ? (
+                        <HotelesPage></HotelesPage>
+                    ):
+                    (   
+                        <Home></Home>
+                    )
+                }
+                ></Route>
+
+                {/* Ruta para crear una cuenta */}
+                <Route
+                path="/createAccount"
+                element={
+                    isUserAuthenticated() ? (
+                        <Navigate to='/'></Navigate>
+                    ):(
+                        <CreateAccount></CreateAccount>
+                    )
+                }
+                ></Route>
             </Routes>  
         </>
     );

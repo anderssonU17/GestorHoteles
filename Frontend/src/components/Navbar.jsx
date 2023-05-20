@@ -1,6 +1,7 @@
-import { Link, NavLink, useNavigate } from 'react-router-dom';
-import LogoutIcon from '@mui/icons-material/Logout';
-
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars, faUser, faSignOutAlt, faSignOut } from '@fortawesome/free-solid-svg-icons';
 
 export const Navbar = () => {
 
@@ -9,56 +10,66 @@ export const Navbar = () => {
         window.location.href = "/login";
     };
 
-    return (
-        <nav className="navbar navbar-expand-sm navbar-dark bg-dark p-2">
-            
-            <Link 
-                className="navbar-brand" 
-                to="/"
+  return (
+    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+      <div className="container-fluid">
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-mdb-toggle="collapse"
+          data-mdb-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <FontAwesomeIcon icon={faBars} />
+        </button>
+        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+          <Link className="navbar-brand mt-2 mt-lg-0" to="/">
+            <img
+              src="https://cdn2.steamgriddb.com/file/sgdb-cdn/icon/851b10e5b105815806efcf78b53588f4/32/256x256.png"
+              height="30"
+              alt="Hotel Logo"
+              loading="lazy"
+            />
+          </Link>
+          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+            <li className="nav-item">
+              <Link className="nav-link" to="/hotel">
+                Hoteles
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/eventos">
+                Eventos
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/reservacion">
+                Reservacion
+              </Link>
+            </li>
+          </ul>
+        </div>
+        <div className="d-flex align-items-center">
+          <Link className="text-reset me-3" to="/user">
+            <FontAwesomeIcon icon={faUser} />
+          </Link>
+          
+          <div className="dropdown">
+            <Link
+              className="nav-link text-reset me-3 hidden-arrow"
+              to="/login"
+              id="navbarDropdownMenuLink"
+              role="button"
+              aria-expanded="false"
+              onClick={() => cerrarSesion()}
             >
-                Asociaciones
+              <FontAwesomeIcon icon={faSignOutAlt} />
             </Link>
-
-            <div className="navbar-collapse">
-                <div className="navbar-nav">
-
-                    <NavLink 
-                        className= {({isActive}) =>`nav-item nav-link ${isActive ? 'active':''}`}
-                        to="/hotel"
-                    >
-                        Hoteles
-                    </NavLink>
-
-                    <NavLink 
-                        className= {({isActive}) =>`nav-item nav-link ${isActive ? 'active':''}`}
-                        to="/usuario"
-                    >
-                        Usuario
-                    </NavLink>
-
-                    <NavLink 
-                        className= {({isActive}) =>`nav-item nav-link ${isActive ? 'active':''}`}
-                        to="/search"
-                    >
-                        Search
-                    </NavLink>
-                </div>
-            </div>
-
-            <div className="navbar-collapse collapse w-100 order-3 dual-collapse2 d-flex justify-content-end">
-                <ul className="navbar-nav ml-auto">
-                    <span className='nav-item nav-link text-primary'>
-                        Andersson
-                    </span>
-                    <Link
-                    className='nav-link'
-                    to="/login"
-                    onClick={() => cerrarSesion()}
-                    >
-                    <LogoutIcon fontSize="medium"></LogoutIcon>
-                    </Link>
-                </ul>
-            </div>
-        </nav>
-    )
-}
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+};
