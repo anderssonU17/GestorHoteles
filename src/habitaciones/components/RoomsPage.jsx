@@ -10,6 +10,7 @@ export const RoomsPage = () => {
     const fetchRooms = async () => {
       try {
         const rooms = await getRoomsByHotel(hotelId);
+        console.log('Habitaciones en estado:', rooms);
         setHotelRooms(rooms);
       } catch (error) {
         console.error('Error fetching rooms:', error);
@@ -23,19 +24,29 @@ export const RoomsPage = () => {
     if (!hotelRooms) {
       return <p>Cargando habitaciones...</p>;
     }
-  
+
     if (hotelRooms.length === 0) {
       return <p>No hay habitaciones disponibles en este hotel.</p>;
     }
 
     return hotelRooms.map((room) => (
-      <div className="card" key={room._id}>
+      <div className="card mb-3" key={room._id}>
+        <div className="card-header">
+          <h5 className="card-title">{room.number}</h5>
+        </div>
         <div className="card-body">
-          <h5 className="card-title">Room Number: {room.number}</h5>
-          <p className="card-text">Description: {room.description}</p>
-          <p className="card-text">Type: {room.type}</p>
-          <p className="card-text">Price: {room.price}</p>
-          <p className="card-text">Availability: {room.available ? 'Available' : 'Not Available'}</p>
+          <h6 className="card-subtitle mb-2 text-muted">{room.type}</h6>
+          <p className="card-text">{room.description}</p>
+          <p className="card-text">
+            <strong>Precio:</strong> ${room.price}
+          </p>
+          <p className="card-text">
+            <strong>Disponibilidad:   </strong>
+            <span className={`badge ${room.available ? 'bg-success' : 'bg-danger'}`}>
+              {room.available ? 'Disponible' : 'No disponible'}
+            </span>
+          </p>
+          <button className="btn btn-primary">Adquirir habitación</button>
         </div>
       </div>
     ));
@@ -47,7 +58,13 @@ export const RoomsPage = () => {
       <div className="card-columns">
         {renderRoomCards()}
       </div>
+      <footer className="footer mt-auto py-3 bg-light text-center">
+        <div className="container">
+          <span className="text-muted">© 2023 Hotel Website. Todos los derechos reservados.</span>
+        </div>
+      </footer>
     </div>
   );
 };
+
 
