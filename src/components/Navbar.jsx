@@ -7,7 +7,7 @@ export const Navbar = () => {
 
     const cerrarSesion = () => {
         localStorage.removeItem("token");
-        window.location.href = "/login";
+        window.location.href = "/";
     };
 
   return (
@@ -25,7 +25,7 @@ export const Navbar = () => {
           <FontAwesomeIcon icon={faBars} />
         </button>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <Link className="navbar-brand mt-2 mt-lg-0" to="/">
+          <Link className="navbar-brand mt-2 mt-lg-0" to="/hoteles">
             <img
               src="https://cdn2.steamgriddb.com/file/sgdb-cdn/icon/851b10e5b105815806efcf78b53588f4/32/256x256.png"
               height="30"
@@ -35,7 +35,7 @@ export const Navbar = () => {
           </Link>
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <Link className="nav-link" to="/hotel">
+              <Link className="nav-link" to="/hoteles">
                 Hoteles
               </Link>
             </li>

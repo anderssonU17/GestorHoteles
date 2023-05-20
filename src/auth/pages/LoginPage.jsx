@@ -18,9 +18,9 @@ export const LoginPage = () => {
         confirmButtonText: 'Ok',
       }).then(r => {
         if(r.isConfirmed){
-          window.location.href= "/";
+          window.location.href= "/hoteles";
         }else {
-          window.location.href = "/";
+          window.location.href = "/hoteles";
         }
       });
     }
