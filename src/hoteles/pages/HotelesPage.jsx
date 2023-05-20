@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { listHotels } from '../api/ApiHotel.js';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { listHotels } from '../api/ApiHotel';
 
 export const HotelesPage = () => {
   const [hotels, setHotels] = useState([]);
@@ -11,10 +12,10 @@ export const HotelesPage = () => {
         if (Array.isArray(result)) {
           setHotels(result);
         } else {
-          console.error("Los datos devueltos no son un array:", result);
+          console.error('Los datos devueltos no son un array:', result);
         }
       } catch (error) {
-        console.error("Error fetching hotels:", error);
+        console.error('Error fetching hotels:', error);
       }
     };
 
@@ -30,7 +31,7 @@ export const HotelesPage = () => {
             <h5 className="card-title">{hotel.name}</h5>
             <p className="card-text">{hotel.description}</p>
             <p className="card-text">{hotel.address}</p>
-            <a href={`/habitaciones/${hotel._id}`} className="btn btn-outline-secondary">Habitaciones Disponibles</a>
+            <Link to={`/rooms/${hotel._id}`} className="btn btn-outline-secondary">Habitaciones Disponibles</Link>
           </div>
         </div>
       </div>
@@ -62,4 +63,3 @@ export const HotelesPage = () => {
     </>
   );
 };
-
