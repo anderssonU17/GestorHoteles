@@ -1,14 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {BrowserRouter} from 'react-router-dom'
-
 import './styles.css'
-import { HotelApp } from './HotelApp'
+import { AppRouter } from './AppRouter'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
-    <HotelApp />
+    <AppRouter />
     </BrowserRouter>
   </React.StrictMode>,
 )
