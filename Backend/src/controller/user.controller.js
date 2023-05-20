@@ -8,6 +8,7 @@ const createUser = async(req, res) => {
     const {name, email, password} = req.body;
     try{
         let usuario = await Usuarios.findOne({email});
+        console.log(usuario);
         if(usuario){
             return res.status(400).send({
                 message: 'Un usuario ya existe con este correo', 
@@ -15,6 +16,7 @@ const createUser = async(req, res) => {
                 usuario: usuario,
             });
         }
+        if(password.length < 6) return res.status(400).send({message:"La contraseña debe tener mas de 6 caracteres."})
         usuario = new Usuarios(req.body);
 
         //Encriptacion de contrasenia
@@ -202,4 +204,21 @@ const readUsers = async(req, res) =>{
     }
 }
 
-module.exports = {createUser, loginUser, editUser,editOwnUser, deleteUser,userDefault, readUsers,readOneUser};
+const readOwnUser = async(req, res)=>{
+    try {
+        
+        const idUser = req.user._id;
+
+        const findUser = await Usuarios.findById(idUser);
+
+        if(!findUser) return res.status(404).send({message: `No se encontro el usuario en la base de datos.`});
+
+        return res.status(200).send({message: `Usurio encontrado.`, findUser})
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({message: 'No se ha podido completar la operacion'})
+    }
+}
+
+module.exports = {createUser, loginUser, editUser,editOwnUser, deleteUser,userDefault, readUsers,readOneUser,readOwnUser};

@@ -57,7 +57,7 @@ const readHotels = async(req,res)=>{
         const hotels = await Hotels.find();
         if(hotels.length == 0) return res.status(404).send({message: 'No se han encontrado hoteles registrados.'});
 
-        return res.status(200).send({ok: true, 'Hoteles encontrados': hotels});
+        return res.status(200).send({ok: true, message: 'Hoteles encontrado', hotels});
 
     } catch (error) {
         console.error(error);

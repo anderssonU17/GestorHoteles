@@ -7,7 +7,7 @@ export const Navbar = () => {
 
     const cerrarSesion = () => {
         localStorage.removeItem("token");
-        window.location.href = "/login";
+        window.location.href = "/";
     };
 
   return (
