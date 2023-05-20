@@ -39,12 +39,16 @@ export const AppRouter = () => {
                     )
                     }
                     ></Route>
-                    <Route
-                    path="/hotel"
-                    exact Component={HotelesPage}
-                    >
-
-                    </Route>
+                    <Route 
+                path="/hotel"
+                element={
+                    isUserAuthenticated() ? (
+                    <HotelesPage></HotelesPage> 
+                    ) : (
+                    <Navigate to="/login"></Navigate>
+                    )
+                    }
+                    ></Route>
             </Routes>  
         </>
     );
