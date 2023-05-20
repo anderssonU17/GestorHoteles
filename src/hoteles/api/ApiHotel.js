@@ -17,3 +17,35 @@ export const listHotels = async () => {
     return [];
   }
 };
+
+export const CreateUser = async (name, email, password, rol) => {
+  try {
+      const usersave = await axios.post(`${URL}create-user`, {
+          name: name,
+          email: email,
+          password: password,
+          rol: rol
+      });
+      
+      // Mensaje si se guardo el usuario correctamente
+      Swal.fire({
+          icon: "success",
+          title: "¡Usuario creado correctamente!",
+          showConfirmButton: true,
+          confirmButtonText: "OK"
+      }).then(() => {
+          // Redirigir al login cuando se haya guardado el usuario
+          window.location.href = "/login";
+      });
+      
+  } catch (error) {
+      // Mostrar mensaje de error si no se guardo en el backend
+      Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "No se pudo guardar el usuario.",
+          showConfirmButton: true,
+          confirmButtonText: "OK"
+      });
+  }
+};
