@@ -13,7 +13,7 @@ export const RoomsPage = () => {
         console.log('Habitaciones en estado:', rooms);
         setHotelRooms(rooms);
       } catch (error) {
-        console.error('Error fetching rooms:', error);
+        console.error('Error buscar rooms:', error);
       }
     };
 
@@ -46,7 +46,7 @@ export const RoomsPage = () => {
               {room.available ? 'Disponible' : 'No disponible'}
             </span>
           </p>
-          <button className="btn btn-primary">Adquirir habitación</button>
+          <button className="btn btn-primary">Reservar Hotel</button>
         </div>
       </div>
     ));
