@@ -46,7 +46,7 @@ export const Navbar = () => {
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/reservacion">
-                Reservacion
+                Facturas
               </Link>
             </li>
           </ul>

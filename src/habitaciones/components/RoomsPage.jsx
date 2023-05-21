@@ -46,7 +46,12 @@ export const RoomsPage = () => {
               {room.available ? 'Disponible' : 'No disponible'}
             </span>
           </p>
-          <button className="btn btn-primary">Reservar Hotel</button>
+          <button
+            className="btn btn-primary"
+            disabled={!room.available} // Deshabilitar el botón si la habitación no está disponible
+          >
+            Reservar Hotel
+          </button>
         </div>
       </div>
     ));
@@ -55,9 +60,7 @@ export const RoomsPage = () => {
   return (
     <div>
       <h1>Habitaciones del Hotel</h1>
-      <div className="card-columns">
-        {renderRoomCards()}
-      </div>
+      <div className="card-columns">{renderRoomCards()}</div>
       <footer className="footer mt-auto py-3 bg-light text-center">
         <div className="container">
           <span className="text-muted">© 2023 Hotel Website. Todos los derechos reservados.</span>
