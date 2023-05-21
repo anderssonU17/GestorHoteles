@@ -6,6 +6,7 @@ import './styles.css';
 import { RoomsPage } from "./habitaciones/components/RoomsPage";
 import { HomePage } from "./home/components/HomePage";
 import { CreateAccount } from "./auth/pages/CreateAccount";
+import { ReservationPage } from "./reservations/components/ReservationPage";
 
 export const AppRouter = () => {
   return (
@@ -60,6 +61,14 @@ export const AppRouter = () => {
             <Navigate to="/login" />
           )}
         />
+          <Route
+          path="/reservation"
+          element={isUserAuthenticated() ? (
+          <ReservationPage />
+            ) : (
+            <Navigate to="/login" />
+            )}
+          />
       </Routes>
     </>
   );

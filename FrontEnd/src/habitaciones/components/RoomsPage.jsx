@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { getRoomsByHotel } from '../api/ApiRoom';
 
 export const RoomsPage = () => {
@@ -19,6 +19,7 @@ export const RoomsPage = () => {
 
     fetchRooms();
   }, [hotelId]);
+
 
   const renderRoomCards = () => {
     if (!hotelRooms) {
@@ -46,12 +47,16 @@ export const RoomsPage = () => {
               {room.available ? 'Disponible' : 'No disponible'}
             </span>
           </p>
-          <button
+          <Link
+            to={{
+              pathname: '/reservation',
+              state: { roomId: room._id }
+            }}
             className="btn btn-primary"
-            disabled={!room.available} // Deshabilitar el botón si la habitación no está disponible
+            disabled={!room.available}
           >
             Reservar Hotel
-          </button>
+          </Link>
         </div>
       </div>
     ));
@@ -69,4 +74,3 @@ export const RoomsPage = () => {
     </div>
   );
 };
-
