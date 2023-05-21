@@ -32,7 +32,7 @@ const createHotel = async(req, res) => {
 
         //Agregar el hotel al usuario admin 
         adminExist.hotel = newHotel._id; // Busca al usuario admin en la DB, asocia al usuario admin con el nuevo hotel
-        if(!adminExist.rol != 'ADMIN') adminExist.rol = 'MANAGER';
+        if(adminExist.rol != 'ADMIN') adminExist.rol = 'MANAGER';
         await adminExist.save();
 
         return res.status(200).send({

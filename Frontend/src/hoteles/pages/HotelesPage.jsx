@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { listHotels } from '../api/ApiHotel';
+import { listHotels, readRol } from '../api/ApiHotel';
 
 export const HotelesPage = () => {
+
   const [hotels, setHotels] = useState([]);
+  const [rol, setRol] = useState(false)
 
   useEffect(() => {
     const fetchHotels = async () => {
@@ -19,7 +21,22 @@ export const HotelesPage = () => {
       }
     };
 
+    const rolAdmin = async() => {
+      try {
+        
+        const rol = await readRol();
+        console.log(rol);
+        if(rol == 'ADMIN'){
+          setRol(true)
+        }
+
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
     fetchHotels();
+    rolAdmin();
   }, []);
 
   const renderHotelCards = () => {
@@ -38,6 +55,14 @@ export const HotelesPage = () => {
     ));
   };
 
+  const renderButtonToAddHotels = () =>{
+    return(
+      <>
+      <Link to={'/createHotel'} ><button className='btn btn-primary' style={{width: '130px'}}>Agregar Hotel</button></Link>
+      </>
+    )
+  }
+
   return (
     <>
       <div className="jumbotron">
@@ -47,11 +72,14 @@ export const HotelesPage = () => {
           <hr className="my-4" />
           <p>Puedes explorar los hoteles disponibles y realizar reservaciones.</p>
         </div>
+        <div className='container'>
+          {rol && renderButtonToAddHotels()}
+        </div>
       </div>
 
       <div className="container">
         <div className="row mt-4">
-          {renderHotelCards()}
+          {renderHotelCards()}  
         </div>
       </div>
 

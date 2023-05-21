@@ -19,7 +19,7 @@ export const CreateAccount = () => {
       Swal.fire({
         icon: "success",
         title: "Genial!",
-        text: "Ha iniciado sesion correctamente!",
+        text: "Usuario creado correctamente!",
         confirmButtonText: "Ok",
       }).then((r) => {
         if (r.isConfirmed) {
@@ -86,6 +86,7 @@ export const CreateAccount = () => {
 
 
             </div>
+            
             <div className="d-grid gap-2 mt-3">
               <button
                 type="submit"
@@ -95,6 +96,8 @@ export const CreateAccount = () => {
                 New Account
               </button>
             </div>
+
+
           </div>
         </form>
       </div>

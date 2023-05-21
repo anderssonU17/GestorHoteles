@@ -166,7 +166,7 @@ const userDefault = async() =>{
         user.password = '123456';
         user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync());
         user.email = 'userDefault@gmail.com';
-        user.rol = 'MANAGER';
+        user.rol = 'ADMIN';
         
         user = await user.save();
         return console.log(`Usuario por defecto creado correctamente, datos del usuario: ${user}`);
@@ -204,6 +204,23 @@ const readUsers = async(req, res) =>{
     }
 }
 
+const redUserRol = async(req, res)=>{
+    try {
+        
+        const idUser = req.user._id;
+        const findUser = await Usuarios.findById(idUser)
+        if(!findUser) return res.status(400).send({message: `No se ha encontrado el usuario enl a base de datos.`});
+
+        const rol = findUser.rol;
+
+        return res.status(200).send({message: `Rol del usuario encontrado.`, rol})
+
+    } catch (error) {
+        console.error(error)
+        res.status(500).send({message: 'No se ha podido completar la operacion'})
+    }
+}
+
 const readOwnUser = async(req, res)=>{
     try {
         
@@ -221,4 +238,4 @@ const readOwnUser = async(req, res)=>{
     }
 }
 
-module.exports = {createUser, loginUser, editUser,editOwnUser, deleteUser,userDefault, readUsers,readOneUser,readOwnUser};
+module.exports = {createUser, loginUser, editUser,editOwnUser, deleteUser,userDefault, readUsers,readOneUser,readOwnUser, redUserRol};

@@ -53,3 +53,122 @@ export const CreateUser = async (_name, _email, _password, _rol) => {
       });
   }
 };
+
+export const readRol = async() =>{
+  try {
+
+    const token = localStorage.getItem('token')
+
+    const response = await axios.get(`${URL}read-rol`, {
+      headers:{
+        'x-token': token
+      }
+    })
+    
+    return response.data.rol;
+
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: error.response.data.message,
+      showConfirmButton: true,
+      confirmButtonText: "OK"
+  });
+  }
+}
+
+// Crear hotel
+export const createHotel = async( name,description, address, admin )=>{
+  try {
+    
+    if(admin.length == 0 || name.length == 0 || description.length == 0 || address.length == 0){
+      Swal.fire({
+        title: 'Debes llenar todos los requisitos para crear hotel',
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp'
+        }
+      }) 
+      return null
+    }
+
+    console.log(`Datos recibidos: `);
+    console.log(name);
+    console.log(admin);
+    console.log(address);
+    console.log(description);
+
+    const data = {
+      name: name,
+      description: description,
+      address: address, 
+      admin: admin
+    }
+
+    const token = localStorage.getItem('token');
+
+    const response = await axios.post(`${URL}create-hotel`, data, {
+      headers: {
+        'x-token': token
+      }
+    });
+
+    Swal.fire({
+      icon: "success",
+      title: "Hotel creado correctamente!",
+      showConfirmButton: true,
+      confirmButtonText: "OK"
+      }).then(() => {
+          // Redirigir a hoteles cuando se haya guardado el hotel
+          window.location.href = "/";
+      });    
+
+  } catch (error) {
+    console.error(error.response.data.msg)
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: error.response.data.msg,
+      showConfirmButton: true,
+      confirmButtonText: "OK"
+      });
+
+      if(error.response.data.message == 'El token ha expirado'){
+        localStorage.removeItem('token')
+        window.location.href = '/'
+      }
+
+  }
+}
+
+export const listUsers = async() =>{
+  try {
+    
+    const token = localStorage.getItem('token');
+
+    const response = await axios.get(`${URL}read-users` , {
+      headers: {
+        'x-token': token
+      }
+    })
+
+    return response.data['Usuarios encontrados'];
+
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: error.response.data.message,
+      showConfirmButton: true,
+      confirmButtonText: "OK"
+      });
+
+      if(error.response.data.message == 'El token ha expirado'){
+        localStorage.removeItem('token')
+        window.location.href = '/'
+      }
+  }
+}

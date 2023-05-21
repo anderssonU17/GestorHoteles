@@ -5,6 +5,8 @@ import { Navbar } from "./components";
 import "./styles.css";
 import { Home } from "./home/components/Home";
 import { RoomsPage } from "./habitaciones/components/RoomsPage";
+import { userIsAdmin } from "./auth/helpers/UserAdmin";
+import { CreateHotel } from "./hoteles/pages/CreateHotel";
 export const AppRouter = () => {
   return (
     <>
@@ -52,6 +54,15 @@ export const AppRouter = () => {
             )
           }
         ></Route>
+
+          {/* Ruta para agregar hotel, si el usuario no esta logueado lo envia al login, si el usuario no es admin lo envia a
+          hoteles */}
+          <Route
+          path="/createHotel"
+          element={
+            isUserAuthenticated() ? <CreateHotel></CreateHotel> : <Navigate to='/'></Navigate>
+          }></Route>
+
       </Routes>
     </>
   );

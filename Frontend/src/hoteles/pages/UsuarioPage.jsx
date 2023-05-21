@@ -28,7 +28,7 @@ export const UsuarioPage = () => {
 
       <div className="card shadow" style={{width: '18rem', margin: 'auto', marginTop: '20px'}}>
         <img src="https://xsgames.co/randomusers/avatar.php?g=pixel" className="card-img-top" alt="user" style={{width: '80%', margin: 'auto', marginTop: '10px', borderRadius: '50%'}}/>
-        <div className="card-body" style={{margin: 'auto'}}>
+        <div className="card-body" style={{margin: 'auto', }}>
           <h5 className="card-title" style={{color: 'Black'}}>Datos de tu cuenta</h5>
         </div>
         <ul className="list-group list-group-flush">

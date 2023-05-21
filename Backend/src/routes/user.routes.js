@@ -2,7 +2,7 @@
 
 const {Router} = require('express');
 const {check} = require('express-validator');
-const { createUser, loginUser, editUser, deleteUser, readUsers,readOneUser ,readOwnUser} = require('../controller/user.controller');
+const { createUser, loginUser, editUser, deleteUser, readUsers,readOneUser ,readOwnUser,redUserRol} = require('../controller/user.controller');
 const { validateParams } = require('../middlewares/validate-params');
 const { validateJWT } = require('../middlewares/validate-jwt')
 const { adminRol } = require('../middlewares/validate-rol')
@@ -20,13 +20,19 @@ api.post('/create-user',[
 api.post('/login', loginUser);
 
 api.get('/read-users',[
-    // adminRol
+    validateJWT,
+    adminRol
 ], readUsers)
 
 //Ver propio usuario 
 api.get('/read-own-user' , [
     validateJWT
 ], readOwnUser)
+
+//Ver el rol que tienen el usuario
+api.get('/read-rol', [
+    validateJWT
+], redUserRol)
 
 api.get('/read-one-user',[
     validateJWT,
