@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
 import { createReservation } from '../api/ApiReservation';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 export const ReservationPage = () => {
-  const location = useLocation();
+  const { roomId } = useParams();
   const navigate = useNavigate();
 
-  const [roomId, setRoomId] = useState(location.state?.roomId || '');
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
 
@@ -24,24 +23,15 @@ export const ReservationPage = () => {
 
       console.log(response);
 
-      // Mostrar SweetAlert para preguntar si desea agregar un servicio
-      Swal.fire({
-        title: '¿Desea agregar un servicio?',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Sí',
-        cancelButtonText: 'No',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          // Navegar a la página de servicios
-          navigate('/servicios');
-        } else {
-          // Mostrar SweetAlert con mensaje de confirmación
-          Swal.fire('¡Reserva creada!', 'Pronto enviaremos su factura.', 'success');
-        }
+      // Mostrar SweetAlert con mensaje de confirmación
+      Swal.fire('¡Reserva creada!', 'Pronto enviaremos su factura.', 'success').then(() => {
+        // Regresar a la página de hoteles
+        navigate('/hoteles');
       });
     } catch (error) {
       console.error(error);
+      //Mostrar error del backend en un SweetAlert 
+      Swal.fire('Error', error.message, 'error');
     }
   };
 
@@ -54,7 +44,7 @@ export const ReservationPage = () => {
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="roomId">
               <Form.Label>ID de la habitación:</Form.Label>
-              <Form.Control type="text" value={roomId} onChange={(e) => setRoomId(e.target.value)} />
+              <Form.Control type="text" value={roomId} readOnly />
             </Form.Group>
 
             <Form.Group controlId="checkIn">
@@ -68,12 +58,10 @@ export const ReservationPage = () => {
             </Form.Group>
             <hr />
 
-            <div className="d-flex justify-content-between">
+            <div className="d-flex justify-content-center">
               <Button variant="success" type="submit">
                 Listo
               </Button>
-
-              <Button variant="secondary">Agregar Servicios</Button>
             </div>
           </Form>
         </Card.Body>
@@ -81,3 +69,4 @@ export const ReservationPage = () => {
     </div>
   );
 };
+

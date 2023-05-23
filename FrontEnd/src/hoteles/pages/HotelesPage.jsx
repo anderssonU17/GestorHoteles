@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { listHotels } from '../api/ApiHotel';
+import { listHotels, readRol } from '../api/ApiHotel';
 import { FaSearch } from 'react-icons/fa';
 
 export const HotelesPage = () => {
   const [hotels, setHotels] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [rol, setRol] = useState(false);
 
   useEffect(() => {
     const fetchHotels = async () => {
@@ -21,7 +22,19 @@ export const HotelesPage = () => {
       }
     };
 
+    const rolAdmin = async () => {
+      try {
+        const rol = await readRol();
+        if (rol === 'ADMIN') {
+          setRol(true);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     fetchHotels();
+    rolAdmin();
   }, []);
 
   const handleSearchTermChange = (event) => {
@@ -43,7 +56,9 @@ export const HotelesPage = () => {
             <h5 className="card-title">{hotel.name}</h5>
             <p className="card-text">{hotel.description}</p>
             <p className="card-text">{hotel.address}</p>
-            <Link to={`/rooms/${hotel._id}`} className="btn btn-outline-secondary">Habitaciones Disponibles</Link>
+            <Link to={`/rooms/${hotel._id}`} className="btn btn-outline-secondary">
+              Habitaciones Disponibles
+            </Link>
           </div>
         </div>
       </div>
@@ -69,13 +84,30 @@ export const HotelesPage = () => {
             <div className="input-group-append">
             </div>
           </div>
+
+          {rol && (
+            <div className="row">
+              <div className="col-md-6 d-flex justify-content-end">
+                <Link to="/createHotel">
+                  <button className="btn btn-primary" style={{ width: '130px' }}>
+                    Agregar Hotel
+                  </button>
+                </Link>
+              </div>
+              <div className="col-md-6 d-flex justify-content-start">
+                <Link to="/graphicsHotels">
+                  <button className="btn btn-primary" style={{ width: '230px' }}>
+                    Estadísticas de hoteles
+                  </button>
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
       <div className="container">
-        <div className="row mt-4">
-          {renderHotelCards()}
-        </div>
+        <div className="row mt-4">{renderHotelCards()}</div>
       </div>
 
       <footer className="footer mt-auto py-3 bg-light text-center">
@@ -86,3 +118,4 @@ export const HotelesPage = () => {
     </>
   );
 };
+

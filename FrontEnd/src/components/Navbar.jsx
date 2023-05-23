@@ -1,14 +1,49 @@
-import React from 'react';
+import React, { useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faUser, faSignOutAlt, faSignOut } from '@fortawesome/free-solid-svg-icons';
+import { readRol } from '../hoteles/api/ApiHotel';
+
 
 export const Navbar = () => {
+
+  const [rol, setRol] = useState(false)
 
     const cerrarSesion = () => {
         localStorage.removeItem("token");
         window.location.href = "/";
     };
+
+    useEffect(() => {
+      
+      const rolAdmin = async() => {
+        try {
+          
+          const rol = await readRol();
+          console.log(rol);
+          if(rol == 'ADMIN'){
+            setRol(true)
+          }
+  
+        } catch (error) {
+          console.error(error)
+        }
+      }
+
+      rolAdmin();
+
+    }, [])
+
+    const renderAllUsers = () =>{
+      return (
+        <li className="nav-item">
+          <Link className="nav-link" to="/view-all-users">
+            | Usuarios de la aplicacion
+          </Link>
+        </li>
+      )
+    }
+    
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -49,6 +84,7 @@ export const Navbar = () => {
                 Facturas
               </Link>
             </li>
+            {rol && renderAllUsers()}
           </ul>
         </div>
         <div className="d-flex align-items-center">

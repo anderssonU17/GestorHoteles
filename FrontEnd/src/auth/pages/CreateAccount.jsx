@@ -19,7 +19,7 @@ export const CreateAccount = () => {
       Swal.fire({
         icon: "success",
         title: "Genial!",
-        text: "Ha iniciado sesion correctamente!",
+        text: "Usuario creado correctamente",
         confirmButtonText: "Ok",
       }).then((r) => {
         if (r.isConfirmed) {

@@ -10,7 +10,7 @@ export const HomePage = () => {
         <div className="container-fluid">
           <Link to="/" style={{ textDecoration: 'none' }}>
             <a className="navbar-brand" href="#">
-              <img id="navbar-logo" src="https://cdn-icons-png.flaticon.com/512/5900/5900195.png" alt="Logo" />Gestor de Hoteles
+            <img id="navbar-logo"src="https://cdn-icons-png.flaticon.com/512/5900/5900195.png" alt="Logo"/>Gestor de Hoteles
             </a>
           </Link>
           <button className="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">

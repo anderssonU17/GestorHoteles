@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { getRoomsByHotel } from '../api/ApiRoom';
 
 export const RoomsPage = () => {
@@ -49,8 +49,8 @@ export const RoomsPage = () => {
           </p>
           <Link
             to={{
-              pathname: '/reservation',
-              state: { roomId: room._id }
+              pathname: `/reservation/${room._id}`,
+              state: { roomId: room._id}
             }}
             className="btn btn-primary"
             disabled={!room.available}
