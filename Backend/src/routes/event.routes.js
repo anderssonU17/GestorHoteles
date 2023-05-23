@@ -5,7 +5,7 @@ const {Router} = require('express');
 const {check} = require('express-validator');
 const {validateParams} = require('../middlewares/validate-params');
 
-const { createEvent,readEventsForHotel ,updateEvent,deleteEvent} = require('../controller/event.controller');
+const { createEvent,readEventsForHotel ,updateEvent,deleteEvent, readEvents} = require('../controller/event.controller');
 const { validateJWT } = require('../middlewares/validate-jwt');
 
 const api = Router();
@@ -25,6 +25,8 @@ api.get('/read-events-for-hotel',[
     check('id','El id es un parametro obligatorio para el uso de la funcion.').not().isEmpty(),
     validateParams
 ],readEventsForHotel);
+
+api.get('/read-events', readEvents);
 
 api.put('/update-event',[
     validateJWT,

@@ -188,5 +188,22 @@ const mostVisitedHotels = async(req, res)=>{
     }
 }
 
+const getHotelById = async (req, res) => {
+    try {
+      const { hotelId } = req.params;
+  
+      // Buscar el hotel por ID en la base de datos
+      const hotel = await Hotels.findById(hotelId);
+  
+      if (!hotel) {
+        return res.status(404).send({ message: 'No se ha encontrado el hotel.' });
+      }
+  
+      return res.status(200).send({ ok: true, message: 'Hotel encontrado', hotel });
+    } catch (error) {
+      console.error('Error al obtener el hotel:', error);
+      res.status(500).send({ message: 'Error al obtener el hotel' });
+    }
+  };
 
-module.exports = {createHotel,readHotels, editHotel, deleteHotel , mostVisitedHotels}
+module.exports = {createHotel,readHotels, editHotel, deleteHotel , mostVisitedHotels, getHotelById}

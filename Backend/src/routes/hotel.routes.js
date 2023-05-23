@@ -2,7 +2,7 @@
 
 const {Router} = require('express');
 const {check} = require('express-validator');
-const { createHotel, readHotels, editHotel, deleteHotel , mostVisitedHotels} = require('../controller/hotel.controller');
+const { createHotel, readHotels, editHotel, deleteHotel , mostVisitedHotels, getHotelById} = require('../controller/hotel.controller');
 const {validateParams} = require('../middlewares/validate-params');
 const { adminRol } = require('../middlewares/validate-rol');
 const { validateJWT } = require('../middlewares/validate-jwt');
@@ -21,6 +21,8 @@ api.post('/create-hotel',[
 ], createHotel);
 
 api.get('/read-hotels', readHotels);
+
+api.get('/get-hotel/:hotelId', getHotelById)
 
 //Ver los 10 hoteles mas visitados
 api.get('/hotels-most-visited', [

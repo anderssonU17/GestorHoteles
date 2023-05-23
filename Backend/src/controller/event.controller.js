@@ -76,6 +76,18 @@ const readEventsForHotel = async(req, res) =>{
     }
 }
 
+const readEvents = async(req, res)=>{
+    try{
+        const events = await Events.find();
+        if(events.length == 0) return res.status(404).send({message: 'No se ha encontrado eventos registrados'});
+
+        return res.status(200).send({ok: true, message: 'Eventos encontrados', events});
+    }catch(error){
+        console.error(error);
+        res.status(500).send({message: 'No se ha podido completar la operacion'})
+    }
+}
+
 const updateEvent = async(req, res)=>{
 
     const {id,name, description, type, date, hotel} = req.body;
@@ -152,4 +164,4 @@ const deleteEvent = async(req, res) =>{
     }
 }
 
-module.exports = {createEvent,readEventsForHotel,updateEvent,deleteEvent}
+module.exports = {createEvent,readEventsForHotel,updateEvent,deleteEvent, readEvents}
