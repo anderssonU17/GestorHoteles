@@ -74,6 +74,18 @@ export const readRol = async() =>{
       text: error.response.data.message,
       showConfirmButton: true,
       confirmButtonText: "OK"
+  }).then(r => {
+    if(r.isConfirmed){
+        if(error.response.data.message == 'El token ha expirado'){
+            localStorage.removeItem('token')
+            window.location.href = '/'
+        }
+    }else {
+        if(error.response.data.message == 'El token ha expirado'){
+            localStorage.removeItem('token')
+            window.location.href = '/'
+        }
+    }
   });
   }
 }
@@ -94,12 +106,6 @@ export const createHotel = async( name,description, address, admin )=>{
       }) 
       return null
     }
-
-    console.log(`Datos recibidos: `);
-    console.log(name);
-    console.log(admin);
-    console.log(address);
-    console.log(description);
 
     const data = {
       name: name,
@@ -134,12 +140,19 @@ export const createHotel = async( name,description, address, admin )=>{
       text: error.response.data.msg,
       showConfirmButton: true,
       confirmButtonText: "OK"
+      }).then(r => {
+        if(r.isConfirmed){
+            if(error.response.data.message == 'El token ha expirado'){
+                localStorage.removeItem('token')
+                window.location.href = '/'
+            }
+        }else {
+            if(error.response.data.message == 'El token ha expirado'){
+                localStorage.removeItem('token')
+                window.location.href = '/'
+            }
+        }
       });
-
-      if(error.response.data.message == 'El token ha expirado'){
-        localStorage.removeItem('token')
-        window.location.href = '/'
-      }
 
   }
 }

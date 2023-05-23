@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
 import { getOwnUser } from "../api/ApiUser";
+import { UpdateOwnUser } from "./UpdateOwnUser";
+import { DeleteOwnUser } from "./DeleteOwnUser";
 
 export const UsuarioPage = () => {
   const [user, setUser] = useState({});
+  // estado para mostrar o no la ventana modal
+  const [showModal, setShowModal] = useState(false)
+  const [showModalDelete, setShowModalDelete] = useState(false)
 
   document.title = 'Usuario'
 
@@ -17,11 +22,19 @@ export const UsuarioPage = () => {
         console.error("Error al obtener el usuario:", error);
       }
     };
-
+    
+    console.log(user.email);
     fetchUser();
-    console.log(user);
-    console.log(`Datos del usuario:` + user.name);
   }, []);
+
+  // Metodos para manejar el estado de la modal
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+  const handleCloseModalDelete = () => {
+    setShowModalDelete(false);
+  };
+
 
   return (
     <>
@@ -39,6 +52,12 @@ export const UsuarioPage = () => {
 
         </ul>
       </div>
+        <div className="card" style={{width: '18rem', margin: 'auto', marginTop: '20px'}}>
+          <button className="btn btn-warning" style={{color: 'white'}} onClick={() => {setShowModal(true)}} >Editar mi perfil</button>
+          <button className="btn btn-danger mt-1" onClick={ () =>{setShowModalDelete(true)} }>Eliminar mi perfil</button>
+        </div>
+      <UpdateOwnUser isOpen={showModal} onClose={ () =>{ handleCloseModal() }} idUser={user._id} ></UpdateOwnUser>
+      <DeleteOwnUser email={user.email} isOpen={showModalDelete} onClose={ () => { handleCloseModalDelete() } } ></DeleteOwnUser>
     </>
   );
 };

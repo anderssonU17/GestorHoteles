@@ -4,6 +4,8 @@ import Swal from "sweetalert2";
 
 export const CreateHotel = () => {
 
+  document.title = 'Crear hotel'
+
   const [name, setName] = useState('');
   const [description, setDescription] = useState('')
   const [address, setAddress] = useState('')

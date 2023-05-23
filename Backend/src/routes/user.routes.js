@@ -2,7 +2,7 @@
 
 const {Router} = require('express');
 const {check} = require('express-validator');
-const { createUser, loginUser, editUser, deleteUser, readUsers,readOneUser ,readOwnUser,redUserRol} = require('../controller/user.controller');
+const { createUser, loginUser, editUser,editOwnUser, deleteUser, readUsers,readOneUser ,readOwnUser,redUserRol} = require('../controller/user.controller');
 const { validateParams } = require('../middlewares/validate-params');
 const { validateJWT } = require('../middlewares/validate-jwt')
 const { adminRol } = require('../middlewares/validate-rol')
@@ -46,9 +46,9 @@ api.put('/edit-user/:id',[
     adminRol
 ], editUser);
 //Editar perfil del usuario logueado
-api.put('/edit-user',[
+api.put('/edit-own-user',[
     validateJWT,
-], editUser);
+], editOwnUser);
 
 api.delete('/delete-client', validateJWT, deleteUser);
 

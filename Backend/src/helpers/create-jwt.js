@@ -8,8 +8,8 @@ const generateJWT = async (uId, username, email) => {
         const token = await jwt.sign(payload, secret, {expiresIn: "1h",});
         return token;
     }catch(err){
-        throw new Error(err + 'No se pudo generar el token')
         console.error(err);
+        throw new Error(err + 'No se pudo generar el token')
     }
 };
 

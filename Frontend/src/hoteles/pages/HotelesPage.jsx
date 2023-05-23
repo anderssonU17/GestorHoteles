@@ -25,7 +25,6 @@ export const HotelesPage = () => {
       try {
         
         const rol = await readRol();
-        console.log(rol);
         if(rol == 'ADMIN'){
           setRol(true)
         }
@@ -63,6 +62,14 @@ export const HotelesPage = () => {
     )
   }
 
+  const renderGraphicsHotels = () =>{
+    return(
+      <>
+        <Link to={'/graphicsHotels'} ><button className='btn btn-primary' style={{width: '230px'}} >Estadisticas de hoteles</button></Link>
+      </>
+    )
+  }
+
   return (
     <>
       <div className="jumbotron">
@@ -72,8 +79,10 @@ export const HotelesPage = () => {
           <hr className="my-4" />
           <p>Puedes explorar los hoteles disponibles y realizar reservaciones.</p>
         </div>
-        <div className='container'>
+        <div className='container d-flex justify-content-between '>
           {rol && renderButtonToAddHotels()}
+          {rol && renderGraphicsHotels()}
+          {}
         </div>
       </div>
 

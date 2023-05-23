@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { topHotels } from "./peticionGraficas";
 import '../graphics.css'
+import { readRol } from "../api/ApiHotel";
 
 export const GraphicsPage = () => {
   //Cambiar  nombre de la ventana
@@ -24,7 +25,16 @@ export const GraphicsPage = () => {
   };
 
   useEffect(() => {
+
+    const validateUser = async() =>{
+      const isAdmin = await readRol()
+      if(isAdmin != 'ADMIN'){
+        window.location.href = '/'
+      }
+    }
+
     requestHotels();
+    validateUser();
   }, []);
 
   //Crear arreglo de objetos con los dos arreglos
@@ -37,7 +47,10 @@ export const GraphicsPage = () => {
 
   return (
     <>
-      <h1>Hoteles mas visitados</h1>
+      <div className="m-4">
+        <h1 className="d-flex justify-content-center">Hoteles mas visitados</h1>
+        <hr />
+      </div>
       {/* Inicio de  la grafica*/}
       <div className="graphics-container" >
         <ResponsiveContainer width='50%' aspect={2} >
@@ -52,7 +65,7 @@ export const GraphicsPage = () => {
             <XAxis dataKey='hotel'></XAxis>
             <YAxis dataKey='visits'></YAxis>
             <Tooltip></Tooltip>
-            <Legend></Legend>
+            {/* <Legend></Legend> */}
             <Bar dataKey='visits' fill="skyBlue" ></Bar>
           </BarChart>
 

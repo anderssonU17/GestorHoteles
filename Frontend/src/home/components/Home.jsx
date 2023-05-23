@@ -9,10 +9,10 @@ export const Home = () => {
     <>
     <nav className="navbar fixed-top navbar-expand-md" style={{backgroundColor: '#e3f2fd'}}>
         <div className="container-fluid">
-          <Link to='/home' style={{textDecoration: 'none'}}>
-          <a className="navbar-brand" href="#"> 
+          <Link to='/home' className="navbar-brand" style={{textDecoration: 'none'}}>
+          
           <img id="navbar-logo"src="https://cdn-icons-png.flaticon.com/512/5900/5900195.png" alt="Logo"/>Gestor de Hoteles
-          </a>
+          
           </Link>
           <button className="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
@@ -24,20 +24,20 @@ export const Home = () => {
             <div className="offcanvas-body">
               <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
                 <li className="nav-item mt-2">
-                <Link to='/home' style={{textDecoration: 'none'}}>
-                  <a className="nav-link" href="#">Información</a>
+                <Link to='/home' className="nav-link" style={{textDecoration: 'none'}}>
+                  Información
                   </Link>
                 </li>
                 <li className="nav-item">
                   
-                <Link to='/login' style={{textDecoration: 'none'}}>
-                  <a className="nav-link"><button type="button" className="btn btn-primary">Iniciar Sesión</button></a>
+                <Link to='/login' className="nav-link" style={{textDecoration: 'none'}}>
+                  <button type="button" className="btn btn-primary">Iniciar Sesión</button>
                 </Link>
 
                 </li>
                 <li>
-                <Link to='/createAccount' style={{textDecoration: 'none'}}>
-                    <a className="nav-link"><button type="button" className="btn btn-info">Crear una cuenta</button></a>
+                <Link to='/createAccount' className="nav-link" style={{textDecoration: 'none'}}>
+                    <button type="button" className="btn btn-info">Crear una cuenta</button>
                 </Link>
                 </li>
               </ul>

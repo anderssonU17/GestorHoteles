@@ -1,5 +1,5 @@
 import { Route, Routes, Navigate } from "react-router-dom";
-import { UsuarioPage, HotelesPage } from "./hoteles";
+import { HotelesPage } from "./hoteles";
 import { CreateAccount, LoginPage, isUserAuthenticated } from "./auth";
 import { Navbar } from "./components";
 import "./styles.css";
@@ -7,6 +7,10 @@ import { Home } from "./home/components/Home";
 import { RoomsPage } from "./habitaciones/components/RoomsPage";
 import { userIsAdmin } from "./auth/helpers/UserAdmin";
 import { CreateHotel } from "./hoteles/pages/CreateHotel";
+import { GraphicsPage } from "./hoteles/pages/GraphicsPage";
+import { UsuarioPage } from "./user/components/UsuarioPage";
+import { AllUsers } from "./user/components/AllUsers";
+
 export const AppRouter = () => {
   return (
     <>
@@ -62,6 +66,21 @@ export const AppRouter = () => {
           element={
             isUserAuthenticated() ? <CreateHotel></CreateHotel> : <Navigate to='/'></Navigate>
           }></Route>
+
+          {/* Ruta para graficas */}
+          <Route
+          path="/graphicsHotels"
+          element={
+            isUserAuthenticated() ? <GraphicsPage></GraphicsPage> : <Navigate to='/'></Navigate>
+          }
+          ></Route>
+          {/* Ruta para visualizar todos los usuarios */}
+          <Route
+          path="/view-all-users"
+          element={
+            isUserAuthenticated() ? <AllUsers></AllUsers> : <Navigate to={'/'}></Navigate>
+          }>
+          </Route>
 
       </Routes>
     </>
