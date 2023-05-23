@@ -190,3 +190,30 @@ export const listUsers = async() =>{
       }
   }
 }
+
+export const getHotelById = async (hotelId) => {
+  try {
+    const response = await axios.get(`${URL}get-hotel/${hotelId}`);
+    const hotel = response.data.hotel;
+    return hotel;
+  } catch (error) {
+    console.error('Error fetching hotel:', error);
+    throw error;
+  }
+};
+
+export const createRoom = async (number, description, type, price, hotel) => {
+  try {
+    const response = await axios.post(`${URL}create-room`, {
+      number,
+      description,
+      type,
+      price,
+      hotel,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('No se ha podido crear la habitación');
+  }
+};

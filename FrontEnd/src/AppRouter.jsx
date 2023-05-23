@@ -11,7 +11,8 @@ import {GraphicsPage} from "./hoteles/pages/GraphicsPage";
 import {AllUsers} from "./user/components/AllUsers";
 import { UsuarioPage } from './user/components/UsuarioPage';
 import { CreateHotel } from './hoteles/pages/CreateHotel';
-
+import { EventoPage } from './eventos/components/EventoPage';
+import { CreateRoom } from './hoteles/pages/CreateRoom';
 
 export const AppRouter = () => {
   return (
@@ -116,6 +117,24 @@ export const AppRouter = () => {
             isUserAuthenticated() ? <AllUsers></AllUsers> : <Navigate to={'/'}></Navigate>
           }>
           </Route>
+           {/* Ruta para eventos */}
+        <Route
+          path="/eventos"
+          element={
+            isUserAuthenticated() ? (
+              <EventoPage />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        {/* Ruta para crear cuarto */}
+        <Route
+          path="/createRoom"
+          element={
+            isUserAuthenticated() ? <CreateRoom></CreateRoom> : <Navigate to='/'></Navigate>
+          }
+          ></Route>
       </Routes>
     </>
   );

@@ -86,22 +86,36 @@ export const HotelesPage = () => {
           </div>
 
           {rol && (
-            <div className="row">
-              <div className="col-md-6 d-flex justify-content-end">
-                <Link to="/createHotel">
-                  <button className="btn btn-primary" style={{ width: '130px' }}>
-                    Agregar Hotel
-                  </button>
-                </Link>
-              </div>
-              <div className="col-md-6 d-flex justify-content-start">
-                <Link to="/graphicsHotels">
-                  <button className="btn btn-primary" style={{ width: '230px' }}>
-                    Estadísticas de hoteles
-                  </button>
-                </Link>
-              </div>
-            </div>
+           <div className="row">
+           <div className="col-md-3 d-flex justify-content-end">
+             <Link to="/createHotel">
+               <button className="btn btn-primary" style={{ width: '130px', marginRight: '10px' }}>
+                 Agregar Hotel
+               </button>
+             </Link>
+           </div>
+           <div className="col-md-3 d-flex justify-content-center">
+             <Link to="/graphicsHotels">
+               <button className="btn btn-primary" style={{ width: '230px', marginRight: '10px' }}>
+                 Estadísticas de hoteles
+               </button>
+             </Link>
+           </div>
+           <div className="col-md-3 d-flex justify-content-center">
+             <Link to="/createRoom">
+               <button className="btn btn-primary" style={{ width: '230px', marginRight: '10px' }}>
+                 Agregar Cuarto
+               </button>
+             </Link>
+           </div>
+           <div className="col-md-3 d-flex justify-content-start">
+             <Link to="/reservationsReport">
+               <button className="btn btn-primary" style={{ width: '230px' }}>
+                 Reporte de Reservaciones
+               </button>
+             </Link>
+           </div>
+         </div>         
           )}
         </div>
       </div>
