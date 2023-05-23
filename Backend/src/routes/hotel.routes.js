@@ -24,8 +24,8 @@ api.get('/read-hotels', readHotels);
 
 //Ver los 10 hoteles mas visitados
 api.get('/hotels-most-visited', [
-    validateJWT,
-    adminRol
+    //validateJWT,
+    //adminRol
 ], mostVisitedHotels)
 
 api.put('/edit-hotel/:id', [

@@ -9,7 +9,6 @@ const createReservation = async(req, res)=>{
     try {
         
         let idUser = req.user.id;
-
         const {room,checkIn,checkOut} = req.body;
 
         const findUser = await User.findById(idUser);

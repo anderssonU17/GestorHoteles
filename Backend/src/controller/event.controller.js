@@ -9,7 +9,7 @@ const createEvent = async (req, res) => {
 
     try{
 
-        if( ! await validateManagerHotel( req.user._id , hotel ) ) return res.status(400).send({ msg: `El usuario logueado no es el manager del hotel.` })
+        // if( ! await validateManagerHotel( req.user._id , hotel ) ) return res.status(400).send({ msg: `El usuario logueado no es el manager del hotel.` })
 
         //Verificar si ya existe un evento con nombre y fecha igual 
         const eventExist = await Events.findOne({name, date});

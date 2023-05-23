@@ -21,7 +21,7 @@ const validateJWT = async(req = request, res = response, next) => {
 
         //Verificar token no ha expirado
         if(payload.exp <= moment().unix()){
-            return res.status(500).send({message: "El token se ha expirado"});
+            return res.status(500).send({message: "El token ha expirado"});
         }
         //Verificar el usuario sigue existiendo
         if(!userEncontrado){

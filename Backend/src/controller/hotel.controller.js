@@ -32,7 +32,7 @@ const createHotel = async(req, res) => {
 
         //Agregar el hotel al usuario admin 
         adminExist.hotel = newHotel._id; // Busca al usuario admin en la DB, asocia al usuario admin con el nuevo hotel
-        if(!adminExist.rol != 'ADMIN') adminExist.rol = 'MANAGER';
+        if(adminExist.rol != 'ADMIN') adminExist.rol = 'MANAGER';
         await adminExist.save();
 
         return res.status(200).send({
@@ -59,7 +59,7 @@ const readHotels = async(req,res)=>{
         if(hotels.length == 0) {
             return res.status(404).send({message: 'No se han encontrado hoteles registrados.'});
         } else {
-            return res.status(200).send({ok: true, 'Hoteles encontrados': hotels});
+            return res.status(200).send({ok: true, message: 'Hoteles encontrado', hotels});
         }
     } catch (error) {
         res.status(404).send({

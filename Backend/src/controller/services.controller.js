@@ -156,8 +156,6 @@ const addServiceToReservation = async(req, res) =>{
 
         if(!serviceExists) return res.status(404).send({message: `No se ha encontrado el servicio enl a base de datos.`});
         
-        //Comprobar que el usuario logueado sea el manager del hotel
-        if ( ! await validateManagerHotel( idUser , serviceExists.hotel ) ) return res.status(400).send({ message: 'El usuario no es el manager del hotel, no tiene permisos para agregar servicios a una reservacion.' })
 
         //Agregar el servicio a la reservacion
         //Primero buscar la resrvacion para preparar los datos que seran sustituidos en la actualizacion luego
